@@ -1,6 +1,10 @@
 # ImmPVox
 
-A Garry's Mod VOX addon with immediate readiness and support for a multitude of actions, with a very extensible API. It works by providing an interface for running audio files in a single swing. This keeps the player's voice in the loop while maintaining the feel of other VOX addons.
+ImmPVox is an **Im**ediate **M**ode **P**layer **Vo**ice module, a Garry's Mod VOX addon with immediate readiness (hence the name) and support for a multitude of actions, with a very extensible API. It works by providing an interface for running audio files in a single swing. This keeps the player's voice in the loop while maintaining the feel of other VOX addons.
+
+## Why?
+
+Because I couldn't wrap my head around existing VOX mods. Therefore I created my own, which is simple to use and contains a spawn menu entry to make it easier for the average user to change their VOX and modify internals.
 
 ## Included Modules (w/ THIS REPOSITORY)
 
