@@ -71,6 +71,9 @@ local PVoxSuppressWarnings = CreateConVar("pvox_suppresswarnings", 1, {FCVAR_ARC
 local PVoxUsePlayerModelBinds = CreateConVar("pvox_useplayermodelbinds", 1, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
+	if ! PVoxAllowNotes then
+		return print("hi! if you're seeing this then it means you have pvox_allownotes set to 0. which means the server modules won't print")
+	end
 	note("listing server VOX modules")
 
 	for k, v in pairs(PVox.Modules) do
