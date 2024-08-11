@@ -65,15 +65,19 @@ PVox = PVox or {
 	LoadedLUAFiles = {},
 }
 
-local PVoxEnabled = CreateConVar("pvox_enabled", 1, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-local PVoxAllowNotes = CreateConVar("pvox_allownotes", 0, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-local PVoxSuppressWarnings = CreateConVar("pvox_suppresswarnings", 1, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-local PVoxUsePlayerModelBinds = CreateConVar("pvox_useplayermodelbinds", 1, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxEnabled                = CreateConVar("pvox_enabled", 1, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxAllowNotes             = CreateConVar("pvox_allownotes", 0, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxSuppressWarnings       = CreateConVar("pvox_suppresswarnings", 1, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxUsePlayerModelBinds    = CreateConVar("pvox_useplayermodelbinds", 1, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxLocalizeDamage         = CreateConVar("pvox_localizedamage", 0, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxSpecifyEntity          = CreateConVar("pvox_specifyotherentity", 0, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 	if ! PVoxAllowNotes then
-		return print("hi! if you're seeing this then it means you have pvox_allownotes set to 0. which means the server modules won't print")
+		print("hi! if you're seeing this then it means you have pvox_allownotes set to 0. which means the server modules won't print")
+		return
 	end
+
 	note("listing server VOX modules")
 
 	for k, v in pairs(PVox.Modules) do
@@ -161,6 +165,12 @@ function PVox:Mount()
 	note("finished loading, found " .. c .. " modules.")
 end
 
+function PVox:GetPlayerModule(player_ob)
+	local ppr = player_ob:GetNWString("vox_preset", "none")
+	local m = PVox.Modules[ppr]
+	if m then return m else return nil end
+end
+
 --* NOTE if you're using glualint,
 --* this entire section is a bunch of warnings. ignore them.
 --* this is for the PVOX class.
@@ -196,8 +206,7 @@ function PVox:ImplementModule(name, imp_func)
 
 			PVox.Modules[name]["actions"][v] = {}
 
-
-			local afiles,_ = file.Find("sound/" .. module_folder .. "/actions/" .. v .. "/*." .. ext, "GAME")
+			local afiles, _ = file.Find("sound/" .. module_folder .. "/actions/" .. v .. "/*." .. ext, "GAME")
 
 			for _, v2 in pairs(afiles) do
 				PVox.Modules[name]["actions"][v][#PVox.Modules[name]["actions"][v] + 1] = module_folder .. "/actions/" .. v .. "/" .. v2
@@ -239,6 +248,11 @@ function PVox:ImplementModule(name, imp_func)
 
 		GetCachedSound = function(self, ply)
 			return ply.CachedSound
+		end,
+
+		HasAction = function(self, action)
+			if ! PVox.Modules[name] or ! PVox.Modules[name]["actions"] then return false end
+			return PVox.Modules[name]["actions"][action] ~= nil
 		end,
 
 		EmitAction = function(self, ply, action, override, new_time)
@@ -616,14 +630,14 @@ PVox:ImplementModule("cs2-sas", function(ply)
 end)
 
 -- Built-in modules:
---    * "reload"						called on reload
---    * "enemy_spotted"			called when aiming at an enemy
---    * "enemy_killed"			called when an enemy is killed
---    * "take_damage"				called when a player takes damage ( 1 in 5 chance )
---    * "no_ammo"						called when a player runs out of ammo
---    * "confirm_kill"			called when an enemy is confirmed to be killed (shot at dead body)
---		* "death"							called when a player dies (not required)
---		* "on_ready"					called when a player spawns
+--       * "reload"               called on reload
+--       * "enemy_spotted"        called when aiming at an enemy
+--       * "enemy_killed"         called when an enemy is killed
+--       * "take_damage"          called when a player takes damage ( 1 in 5 chance )
+--       * "no_ammo"              called when a player runs out of ammo
+--       * "confirm_kill"         called when an enemy is confirmed to be killed (shot at dead body)
+--       * "death"                called when a player dies (not required)
+--       * "on_ready"             called when a player spawns
 PVox:ImplementModule("cs2-phoenix", function(ply)
 	return {
 		["print_name"] = "CS2 Phoenix Connexion VOX (Ported)",
@@ -889,45 +903,92 @@ hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 				mod:EmitAction(ply, "reload")
 			end
 		end
-	elseif key == IN_ATTACK2 then
-		-- see if we have our eyes on an NPC
+	end
+end)
 
-		local trace = ply:GetEyeTrace()
+-- we use a simple kill confirm bind instead of automatic detection.
+-- this just feels better when playing
+concommand.Add("pvox_smart_confirm", function(ply, args, cmd)
+	local et = ply:GetEyeTrace()
+	local ent = et.Entity
 
-		if IsValid(trace.Entity) and trace.Entity:IsNPC() then
-			-- play the enemy spotted VOX from the player's preset
-			local playerPreset = ply:GetNWString("vox_preset", "none")
+	if ! IsValid(ent) then return end
+	if (ent:GetClass() ~= "prop_ragdoll") then return end
 
-			if playerPreset ~= "none" then
-				local mod = PVox:GetModule(playerPreset)
+	local pr = ply:GetNWString("vox_preset", "none")
+	if pr == "none" then return end
 
-				if mod then
-					mod:EmitAction(ply, "enemy_spotted")
-				end
-			end
+	local mod = PVox.Modules[pr]
+	ply:SetNWBool("RanFromSmart", true)
+	mod:EmitAction(ply, "confirm_kill")
+	ply:SetNWBool("RanFromSmart", false)
+end)
+
+-- most hitgroups supported.
+-- at least the major ones
+--
+-- can't believe this wasnt implemented by default lol
+local HGT = {
+	[HITGROUP_HEAD] = "head",
+	[HITGROUP_CHEST] = "chest",
+	[HITGROUP_STOMACH] = "stomach",
+	[HITGROUP_LEFTARM] = "leftarm",
+	[HITGROUP_LEFTLEG] = "leftleg",
+	[HITGROUP_RIGHTARM] = "rightarm",
+	[HITGROUP_RIGHTLEG] = "rightleg",
+	[HITGROUP_GENERIC] = "generic",
+	[HITGROUP_GEAR] = "gear",
+}
+
+-- some NPC support
+local NPCS = {
+	["npc_combine_s"]         = "soldier",
+	["npc_metropolice"]       = "soldier",
+	["npc_manhack"]           = "manhack",
+	["npc_stalker"]           = "stalker",
+	["npc_antlion"]           = "antlion",
+	["npc_antlionguard"]      = "antlion",
+	["npc_barnacle"]          = "barnacle",
+	["npc_fastzombie"]        = "zombie",
+	["npc_fastzombietorso"]   = "zombie",
+	["npc_poisonzombie"]      = "zombie",
+	["npc_zombie"]            = "zombie",
+	["npc_zombine"]           = "zombine",
+}
+
+hook.Add("OnEntityCreated", "SmartManage", function(ent)
+	if ! IsValid(ent) then return end
+	ent:SetNWBool("Spotted", false)
+end)
+
+-- we instead run spotted on entities TAKING DAMAGE
+-- this sounds way better in practice and makes for a
+-- much less immersion breaking game.
+hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
+	local pot_ply = dm:GetAttacker()
+	if ! pot_ply:IsPlayer() then return end
+
+	local mod = PVox:GetPlayerModule(pot_ply)
+
+	if ! ent:IsNextBot() and ! ent:IsNPC() and ! ent:IsRagdoll() then return end
+
+	local spcc = "enemy"
+	local e_class = ent:GetClass()
+
+	if PVoxSpecifyEntity:GetBool() then
+		if (! NPCS[e_class] or ! mod:HasAction(NPCS[e_class])) then
+			spcc = "enemy"
+			warn("no enemy implemented for " .. ent:GetClass() .. ". defaulting to `enemy_*'")
+		else
+			spcc = NPCS[e_class]
 		end
 	end
 
-	if key == IN_ATTACK then
-		local weap = ply:GetActiveWeapon()
-
-		local preset = ply:GetNWString("vox_preset", "none")
-
-		if ! IsValid(weap) then return end
-
-		if weap:GetPrimaryAmmoType() == 10 then
-			local mod = PVox:GetModule(preset)
-			if mod then
-				mod:EmitAction(ply, "frag_out", false, 2)
-			end
-		end
-
-		local eyt = ply:GetEyeTrace()
-
-		if IsValid(eyt.Entity) and eyt.Entity:GetClass() == "prop_ragdoll" then
-			local mod = PVox:GetModule(preset)
-			mod:EmitAction(ply, "confirm_kill", nil)
-		end
+	if ent:Health() > 0 and ent:GetNWBool("Spotted", false) == false then
+		ent:SetNWBool("Spotted", true)
+		mod:EmitAction(pot_ply, spcc .. "_spotted")
+	elseif ent:Health() <= 0 then
+		mod:EmitAction(pot_ply, spcc .. "_killed")
 	end
 end)
 
@@ -946,26 +1007,35 @@ hook.Add("OnNPCKilled", "PlayerVoxOnNPCKilled", function(npc, attacker, inflicto
 	end
 end)
 
-hook.Add("PlayerShouldTakeDamage", "PlayerVoxPlayerShouldTakeDamage", function(ply, attacker)
+hook.Add("ScalePlayerDamage", "PlayerVoxPlayerShouldTakeDamage", function(ply, hitgroup, dmginfo)
 	if ! IsValid(ply) then return end
-	if ! IsValid(attacker) then return end
 
-	local playerPreset = ply:GetNWString("vox_preset", "none")
+	local mod = PVox:GetPlayerModule(ply)
+	if ! mod then return end
 
-	if playerPreset ~= "none" then
-		local mod = PVox:GetModule(playerPreset)
-		if ! mod then return end
-		local chance = math.random(1, 5) == 1
+	local chance = math.random(1, 5) == 1
 
-		if ! ply:InVehicle() and chance then
-			mod:EmitAction(ply, "take_damage")
+	if ! ply:InVehicle() and chance then
+		if PVoxLocalizeDamage:GetBool() then
+			local hgts = HGT [ hitgroup ]
+			if ! hgts then return warn("there was no key to supply " .. hitgroup .. ". please report this to developers. pvox_localizedamage") end
+
+			local js = "damage_" .. hgts
+
+			if ! mod:HasAction(js) then
+				warn("couldn't find a localized damage module. might not support it :/")
+				warn("play `take_damage' instead")
+				mod:EmitAction(ply, "take_damage")
+			else
+				mod:EmitAction(ply, js)
+			end
 		else
-			if ! chance then return end
-			mod:EmitAction(ply, "take_damage_in_vehicle")
+			mod:EmitAction(ply, "take_damage")
 		end
+	else
+		if ! chance then return end
+		mod:EmitAction(ply, "take_damage_in_vehicle")
 	end
-
-	return true
 end)
 
 hook.Add("ShutDown", "PlayerVoxSavePreset", PVOX_SavePreset)
