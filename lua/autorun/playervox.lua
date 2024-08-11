@@ -1,3 +1,5 @@
+local PVOX_VersionStr = "pvox-v6-git"
+
 --[[ GMod Utility Scripts ]]
 -- PlayerVox
 -- Give players a voice!
