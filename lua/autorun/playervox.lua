@@ -1014,7 +1014,7 @@ hook.Add("OnNPCKilled", "PlayerVoxOnNPCKilled", function(npc, attacker, inflicto
 		local mod = PVox:GetModule(playerPreset)
 
 		if mod then
-			mod:EmitAction(attacker, "enemy_killed", true)
+			mod:EmitAction(attacker, "enemy_killed")
 		end
 	end
 end)
