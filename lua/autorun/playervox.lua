@@ -464,6 +464,8 @@ if SERVER then
 	end)
 end
 
+local mdl_loading_start = CurTime()
+
 --* note: this mounts PVox modules (includes each file)
 --* this process isn't that complicated
 PVox:Mount()
@@ -773,6 +775,11 @@ PVox:ImplementModule("none", function(ply)
 		},
 	}
 end)
+
+local mdl_loading_end = CurTime()
+local mdl_loading_total = mdl_loading_end - mdl_loading_start
+
+warn("module loading took " .. mdl_loading_total .. "s :-)")
 
 concommand.Add("pvox_CalloutPanel", function(ply, cmd, args)
 	local preset = ply:GetNWString("vox_preset", "none")
