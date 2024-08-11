@@ -24,17 +24,20 @@ local PVOX_VersionStr = "pvox-v6-git-b9fc24e"
 -- and it will show up in the menu. Once played, it will play the VOX audio for that callout.
 --
 -- Built-in modules:
---	* "reload"					called on reload
---	* "enemy_spotted"			called when aiming at an enemy
---	* "enemy_killed"			called when an enemy is killed
---	* "take_damage"				called when a player takes damage ( 1 in 5 chance )
---	* "no_ammo"					called when a player runs out of ammo
---	* "confirm_kill"			called when an enemy is confirmed to be killed (shot at dead body)
---	* "death"					called when a player dies (not required)
---	* "on_ready"				called when a player spawns
---	* "pickup_weapon"			called when a player picks up a weapon. This takes priority over on_ready, so add your on_ready files into this instead.
---	* "inspect"					called when the key `F` is pressed.
---	* "take_damage_in_vehicle"	called when the player takes damage in a vehicle.
+--	* "reload"                    called on reload
+--	* "enemy_spotted"             called when aiming at an enemy
+--	* "enemy_killed"              called when an enemy is killed
+--	* "take_damage"               called when a player takes damage ( 1 in 5 chance )
+--	* "no_ammo"                   called when a player runs out of ammo
+--	* "confirm_kill"              called when an enemy is confirmed to be killed (shot at dead body)
+--	* "death"                     called when a player dies (not required)
+--	* "on_ready"                  called when a player spawns
+--	* "pickup_weapon"             called when a player picks up a weapon. This takes priority over on_ready, so add your on_ready files into this instead.
+--	* "inspect"                   called when the key `F` is pressed.
+--	* "take_damage_in_vehicle"    called when the player takes damage in a vehicle.
+--	* "[ENTITY]_spotted"          called when a specific entity is spotted. requires PVoxSpecifyEntity to be on
+--	* "[ENTITY]_killed"           called when a specific entity dies. requires PVoxSpecifyEntity to be on
+--	* "damage_[HITGROUP]"         called when a specific part of a player is shot. requires PVoxLocalizeDamage to be on
 --
 -- Unnecessary/Potentially Deprecated Modules:
 --
