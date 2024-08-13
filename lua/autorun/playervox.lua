@@ -237,23 +237,23 @@ function PVox:ImplementModule(name, imp_func)
 
 	table.Merge(PVox.Modules[name], {
 		StopEmit = function(self, ply)
-			ply.Emitting = false
+			ply:SetNWBool("PVOX_Emitting", false)
 		end,
 
 		StartEmit = function(self, ply)
-			ply.Emitting = true
+			ply:SetNWBool("PVOX_Emitting", true)
 		end,
 
 		IsEmitting = function(self, ply)
-			return ply.Emitting
+			return  ply:GetNWBool("PVOX_Emitting", false)
 		end,
 
 		SetCachedSound = function(self, ply, f)
-			ply.CachedSound = f
+			ply:SetNWString("PVOX_CachedSound", f)
 		end,
 
 		GetCachedSound = function(self, ply)
-			return ply.CachedSound
+			return ply:GetNWString("PVOX_CachedSound", "")
 		end,
 
 		HasAction = function(self, action)
@@ -319,13 +319,14 @@ function PVox:ImplementModule(name, imp_func)
 
 			time = time or 0
 
-			ply.Emitting = true
+			ply:SetNWBool("PVOX_Emitting", true)
 
 			ply:EmitSound(sound, 511)
 
 			timer.Simple(time, function()
 				if ! IsValid(ply) then return end
-				ply.Emitting = false
+
+				ply:SetNWBool("PVOX_Emitting", false)
 			end)
 		end,
 
@@ -809,6 +810,10 @@ if CLIENT then return end
 hook.Add("PlayerInitialSpawn", "StartPlayerValues", function(ply)
 	ply:SetNWString("vox_preset", "combinesoldier")
 	ply:SetNWBool("vox_enabled", true)
+	ply:SetNWBool("PVOX_Emitting", false)
+	ply:SetNWString("PVOX_CachedSound", "")
+
+	-- loaded network stuff, we're good.
 
 	PVOX_LoadPresets()
 end)
