@@ -68,6 +68,10 @@ function PVOX_LoadPresets() end
 ---@param imp_func PVOX_ModuleBaseClass
 function PVox:ImplementModule(name, imp_func) end
 
+--- Returns the player's module. Gets the `player_obj`'s networked string, `vox_preset`.
+--- @param player_obj Player
+function PVox:GetPlayerModule(player_obj) end
+
 --- @class PVOX_ModuleBaseClass
 --- @type table
 --- 
