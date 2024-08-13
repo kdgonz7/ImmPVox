@@ -65,16 +65,16 @@ function PVOX_LoadPresets() end
 --- 
 --- @see PVOX_ModuleBaseClass
 ---@param name string
----@param imp_func PVOX_ModuleBaseClass
+---@param imp_func function
 function PVox:ImplementModule(name, imp_func) end
 
 --- Returns the player's module. Gets the `player_obj`'s networked string, `vox_preset`.
 --- @param player_obj Player
+--- @nodiscard
+--- @return PVOX_ModuleBaseClass
 function PVox:GetPlayerModule(player_obj) end
 
 --- @class PVOX_ModuleBaseClass
---- @type table
---- 
 --- The default PVOX module class. 
 --- It's used by `PVox:ImplementModule` to implement and use a module.
 PVOX_ModuleBaseClass = PVOX_ModuleBaseClass or {}
@@ -98,8 +98,8 @@ PVOX_ModuleBaseClass = PVOX_ModuleBaseClass or {}
 --- 
 --- @param ply Player
 --- @param action string
---- @param override boolean
---- @param new_time number
+--- @param override? boolean
+--- @param new_time? number
 function PVOX_ModuleBaseClass:EmitAction(ply, action, override, new_time) end
 
 --- Unticks `ply.Emitting`.
