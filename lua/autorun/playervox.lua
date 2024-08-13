@@ -100,12 +100,13 @@ concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 	end
 end)
 
-local function warn(msg)
+function warn(msg)
 	if PVoxSuppressWarnings:GetBool() then return end
 	MsgC(Color(255, 119, 0), "[PVox]", Color(255, 255, 255), " " .. msg .. "\n")
 end
 
-local function note(msg)
+---@diagnostic disable-next-line: lowercase-global
+function note(msg)
 	if ! PVoxAllowNotes:GetBool() then return end
 
 	MsgC(Color(0, 229, 255), "[PVox]", Color(255, 255, 255), " " .. msg .. "\n")
@@ -263,8 +264,9 @@ function PVox:ImplementModule(name, imp_func)
 		EmitAction = function(self, ply, action, override, new_time)
 			if ! IsValid(ply) then return end
 			if CLIENT then return end
-
-			if hook.Run("PVOX_EmitAction", ply, action, override, new_time) == false then
+			local r = hook.Run("PVOX_EmitAction", ply, action, override, new_time) or true
+			
+			if r == false then
 				return
 			end
 
