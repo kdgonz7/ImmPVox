@@ -995,7 +995,9 @@ hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
 	local e_class = ent:GetClass()
 
 	if PVoxSpecifyEntity:GetBool() then
-		if (! NPCS[e_class] or ! mod:HasAction(NPCS[e_class])) then
+		local npcclass = NPCS[e_class] or false
+---@diagnostic disable-next-line: need-check-nil
+		if (! npcclass or ! mod:HasAction(pot_ply, npcclass)) then
 			spcc = "enemy"
 			warn("no enemy implemented for " .. ent:GetClass() .. ". defaulting to `enemy_*'")
 		else
