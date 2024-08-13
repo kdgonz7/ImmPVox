@@ -264,9 +264,9 @@ function PVox:ImplementModule(name, imp_func)
 		EmitAction = function(self, ply, action, override, new_time)
 			if ! IsValid(ply) then return end
 			if CLIENT then return end
-			local r = hook.Run("PVOX_EmitAction", ply, action, override, new_time) or true
+			local r = hook.Run("PVOX_EmitAction", ply, action, override, new_time)
 			
-			if r == false then
+			if r == false and r != nil then
 				return
 			end
 
@@ -307,10 +307,8 @@ function PVox:ImplementModule(name, imp_func)
 				dur = 0.5
 			end
 
-			timer.Simple(0, function()
-				self:SetCachedSound(ply, rand_sound)
-				self:PlaySoundSafe(ply, rand_sound, dur + new_time)
-			end)
+			self:SetCachedSound(ply, rand_sound)
+			self:PlaySoundSafe(ply, rand_sound, dur + new_time)
 		end,
 
 		PlaySoundSafe = function(self, ply, sound, time)
