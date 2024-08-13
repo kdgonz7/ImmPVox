@@ -100,12 +100,12 @@ concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 	end
 end)
 
-function warn(msg)
+local function warn(msg)
 	if PVoxSuppressWarnings:GetBool() then return end
 	MsgC(Color(255, 119, 0), "[PVox]", Color(255, 255, 255), " " .. msg .. "\n")
 end
 
-function note(msg)
+local function note(msg)
 	if ! PVoxAllowNotes:GetBool() then return end
 
 	MsgC(Color(0, 229, 255), "[PVox]", Color(255, 255, 255), " " .. msg .. "\n")
