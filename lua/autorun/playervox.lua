@@ -1043,7 +1043,7 @@ hook.Add("ScalePlayerDamage", "PlayerVoxPlayerShouldTakeDamage", function(ply, h
 
 			local js = "damage_" .. hgts
 
-			if ! mod:HasAction(js) then
+			if ! mod:HasAction(ply, js) then
 				warn("couldn't find a localized damage module. might not support it :/")
 				warn("play `take_damage' instead")
 				mod:EmitAction(ply, "take_damage")
