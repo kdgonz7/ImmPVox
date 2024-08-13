@@ -423,6 +423,7 @@ function PVox:GenerateSimilarNames(amount, common_name, ext, zeroes, prefix)
 
 	for i = 1, amount do
 		if zeroes and i < 10 then
+---@diagnostic disable-next-line: cast-local-type
 			i = "0" .. i
 		end
 
