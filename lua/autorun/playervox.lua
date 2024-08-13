@@ -386,6 +386,7 @@ function PVOX_LoadPresets()
 	for k,v in pairs(JS) do
 		local ply = player.GetBySteamID64(k)
 		if ! IsValid(ply) then continue end
+		if ! ply then continue end
 
 		ply:SetNWString("vox_preset", v)
 	end
