@@ -1,7 +1,6 @@
-local PVOX_VersionStr = "pvox-v8-git-a1a470a"
+local PVOX_VersionStr = "pvox-v8-git-71da691"
 
---[[ GMod Utility Scripts ]]
--- PlayerVox
+-- PlayerVox (PVOX)
 -- Give players a voice!
 --
 --
