@@ -78,6 +78,7 @@ local PVoxLocalizeDamage         = CreateConVar("pvox_localizedamage", "0", {FCV
 local PVoxSpecifyEntity          = CreateConVar("pvox_specifyotherentity", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxSendDamageOnce         = CreateConVar("pvox_senddamageonce", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxLocalizationLang       = CreateConVar("pvox_localizationlang", "en_US", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxUseCC                  = CreateConVar("pvox_useclosedcaptioning", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 	if ! PVoxAllowNotes then
@@ -341,6 +342,7 @@ function PVox:ImplementModule(name, imp_func)
 				-- sends to chat the CC of the audio string
 				local ccstr = PVox.Modules[name].cc[PVoxLocalizationLang:GetString()][rand_sound]
 				if ! ccstr then return end
+				if ! PVoxUseCC:GetBool() then return end
 
 				PrintMessage(HUD_PRINTTALK, ply:Nick() .. ": " .. ccstr)
 			end
