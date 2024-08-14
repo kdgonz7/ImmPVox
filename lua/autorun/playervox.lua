@@ -989,6 +989,7 @@ hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
 
 	local mod = PVox:GetPlayerModule(pot_ply)
 
+	if ! mod then return end
 	if ! ent:IsNextBot() and ! ent:IsNPC() and ! ent:IsRagdoll() then return end
 
 	local spcc = "enemy"
@@ -996,8 +997,9 @@ hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
 
 	if PVoxSpecifyEntity:GetBool() then
 		local npcclass = NPCS[e_class] or false
+
 ---@diagnostic disable-next-line: need-check-nil
-		if (! npcclass or ! mod:HasAction(pot_ply, npcclass)) then
+		if (! npcclass) then
 			spcc = "enemy"
 			warn("no enemy implemented for " .. ent:GetClass() .. ". defaulting to `enemy_*'")
 		else
@@ -1009,7 +1011,7 @@ hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
 		ent:SetNWBool("Spotted", true)
 		mod:EmitAction(pot_ply, spcc .. "_spotted")
 	elseif ent:Health() <= 0 then
-		mod:EmitAction(pot_ply, spcc .. "_killed")
+		mod:EmitAction(pot_ply, spcc .. "_killed", true)
 	end
 end)
 
