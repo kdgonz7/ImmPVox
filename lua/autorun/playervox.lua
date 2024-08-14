@@ -81,7 +81,7 @@ local PVoxLocalizationLang       = CreateConVar("pvox_localizationlang", "en_US"
 local PVoxUseCC                  = CreateConVar("pvox_useclosedcaptioning", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
-	if ! PVoxAllowNotes then
+	if ! PVoxAllowNotes:GetBool() then
 		print("hi! if you're seeing this then it means you have pvox_allownotes set to 0. which means the server modules won't print")
 		return
 	end
