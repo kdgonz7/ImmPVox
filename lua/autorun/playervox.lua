@@ -1012,9 +1012,7 @@ hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
 		ent:SetNWBool("Spotted", true)
 		mod:EmitAction(pot_ply, spcc .. "_spotted")
 	elseif ent:Health() <= 0 then
-		mod:StopEmit(pot_ply)
-		pot_ply:StopSound(mod:GetCachedSound(pot_ply))
-		mod:EmitAction(pot_ply, spcc .. "_killed", true)
+		mod:EmitAction(pot_ply, spcc .. "_killed")
 	end
 end)
 
