@@ -133,6 +133,32 @@ function PVox:GetTotalSoundCount(modu)
 	return final
 end
 
+function PVox:MinimumRequired(ver, msg, modname)
+	-- will error if the PVox_VersionStr does not match ver.
+	-- ver should be in the format "v<whatever version number>, and if the version does not match it will error."
+	-- e.g usage
+	-- 
+	-- PVox:MinimumRequired("pvox-v3")
+	
+	if ! PVOX_VersionStr then
+		error ("PVox:MinimumRequired was called before PVox was initialized!")
+	end
+
+	local vers = string.Replace(ver, "pvox-v", "")
+	local our_vers = string.sub(PVOX_VersionStr, 7, -13)
+
+	local vers_n = tonumber(vers)
+	local our_vers_n = tonumber(our_vers)
+
+	if ! vers_n or ! our_vers_n then
+		error ("PVox:MinimumRequired was called with an invalid version number!")
+	end
+
+	if our_vers_n < vers_n then
+		error (msg or ("PVox is not updated. Please reinstall from the steam workshop to use " .. modname))
+	end
+end
+
 function PVox:BlackListModule(modu)
 	PVox.Blacklisted[modu] = true
 end
