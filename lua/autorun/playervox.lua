@@ -1008,11 +1008,26 @@ hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
 		end
 	end
 
+
 	if ent:Health() > 0 and ent:GetNWBool("Spotted", false) == false then
 		ent:SetNWBool("Spotted", true)
+		if ! mod:HasAction(pot_ply, spcc .. "_spotted") then
+			mod:EmitAction(pot_ply, "enemy" .. "_spotted")
+			return
+		end
+
 		mod:EmitAction(pot_ply, spcc .. "_spotted")
 	elseif ent:Health() <= 0 then
-		mod:EmitAction(pot_ply, spcc .. "_killed")
+		if ent:GetNWBool("Spotted", false) == true then
+			if ! mod:HasAction(pot_ply, spcc .. "_killed") then
+				mod:EmitAction(pot_ply, "enemy" .. "_spotted")
+				return
+			end
+
+			mod:EmitAction(pot_ply, spcc .. "_killed")
+
+			ent:SetNWBool("Spotted", false)
+		end
 	end
 end)
 
