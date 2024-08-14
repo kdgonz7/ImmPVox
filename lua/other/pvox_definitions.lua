@@ -86,6 +86,15 @@ function PVox:EnableCC(name) end
 --- @param sent string
 function PVox:ImplementCC(lang, mod, audio_str, sent) end
 
+--- Errors if ver is not met. `ver` is a string that is in the format of `pvox-v[...]`, where `[...]` is the version number. e.g. pvox-v3.
+--- It then parses this input and checks it against the currently installed version. While, this isn't the best way to do it,
+--- It is a way to ensure that a module is compatible with a certain version, especially in the earlier versions of PVOX, where there was
+--- a lot of things being added at one time, and some things breaking APIs.
+--- @param ver string       The version string
+--- @param msg string       The error message
+--- @param modname string   The name of the module
+function PVox:MinimumRequired(ver, msg, modname) end
+
 --- @class PVOX_ModuleBaseClass
 --- The default PVOX module class. 
 --- It's used by `PVox:ImplementModule` to implement and use a module.
