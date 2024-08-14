@@ -5,7 +5,7 @@
 	hook.Add( "PopulateToolMenu", "Cat232", function()
 		---
 		---@param panel DForm
-		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXSettings", "#Settings", "", "", function( panel )
+		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXSettings", "#Regular Settings", "", "", function( panel )
 			panel:ClearControls()
 
 			if LocalPlayer():IsSuperAdmin() then
@@ -32,7 +32,7 @@
 			end
 		end )
 		---@param panel DForm
-		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXDebug", "#Debug", "", "", function( panel )
+		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXDebug", "#Debug Settings", "", "", function( panel )
 			panel:ClearControls()
 			if LocalPlayer():IsSuperAdmin() then
 				panel:CheckBox( "Allow Notes", "pvox_allownotes" )
@@ -42,7 +42,7 @@
 			end
 		end )
 		---@param panel DForm
-		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXVOX", "#VOX", "", "", function( panel )
+		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXVOX", "#VOX Controls", "", "", function( panel )
 			panel:ClearControls()
 			
 			---@class DComboBox
@@ -65,7 +65,7 @@
 		end )
 
 		---@param panel DForm
-		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXINFO", "#Info", "", "", function( panel )
+		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXINFO", "#Server Information", "", "", function( panel )
 			panel:ClearControls()
 			
 			panel:ControlHelp("These are informations about the current server's configurations.")
