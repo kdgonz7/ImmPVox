@@ -1,4 +1,4 @@
-local PVOX_VersionStr = "pvox-v7-git-29509fd"
+local PVOX_VersionStr = "pvox-v7.5-git-a1a470a"
 
 --[[ GMod Utility Scripts ]]
 -- PlayerVox
