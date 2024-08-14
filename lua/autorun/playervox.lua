@@ -1117,6 +1117,8 @@ hook.Add("EntityTakeDamage", "PlayerVoxOnDamage", function (ent, dm)
 	local is_general_damage = ! (dm:IsDamageType(DMG_BULLET))
 	if ! is_general_damage then return end
 
+	if ! IsValid(ent) or ! ent:IsPlayer() then return end
+
 
 	local m = PVox:GetPlayerModule(ent)
 	if ! m then return end
