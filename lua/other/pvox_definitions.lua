@@ -74,6 +74,18 @@ function PVox:ImplementModule(name, imp_func) end
 --- @return PVOX_ModuleBaseClass
 function PVox:GetPlayerModule(player_obj) end
 
+--- Enables the CC with in module `name`. CC is a v8 feature, therefore might need an update before it can be used.
+--- @param name string
+function PVox:EnableCC(name) end
+
+--- Adds the audio_str to the Closed Captions for module `mod`, in language `lang`. `sent` will be printed
+--- while the audio is playing.
+--- @param lang string
+--- @param mod string
+--- @param audio_str string
+--- @param sent string
+function PVox:ImplementCC(lang, mod, audio_str, sent) end
+
 --- @class PVOX_ModuleBaseClass
 --- The default PVOX module class. 
 --- It's used by `PVox:ImplementModule` to implement and use a module.
