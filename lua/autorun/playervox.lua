@@ -70,12 +70,13 @@ PVox = PVox or {
 	LoadedLUAFiles = {},
 }
 
-local PVoxEnabled                = CreateConVar("pvox_enabled", 1, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-local PVoxAllowNotes             = CreateConVar("pvox_allownotes", 0, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-local PVoxSuppressWarnings       = CreateConVar("pvox_suppresswarnings", 1, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-local PVoxUsePlayerModelBinds    = CreateConVar("pvox_useplayermodelbinds", 1, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-local PVoxLocalizeDamage         = CreateConVar("pvox_localizedamage", 0, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-local PVoxSpecifyEntity          = CreateConVar("pvox_specifyotherentity", 0, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxEnabled                = CreateConVar("pvox_enabled", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxAllowNotes             = CreateConVar("pvox_allownotes", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxSuppressWarnings       = CreateConVar("pvox_suppresswarnings", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxUsePlayerModelBinds    = CreateConVar("pvox_useplayermodelbinds", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxLocalizeDamage         = CreateConVar("pvox_localizedamage", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxSpecifyEntity          = CreateConVar("pvox_specifyotherentity", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxSendDamageOnce         = CreateConVar("pvox_senddamageonce", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 	if ! PVoxAllowNotes then
@@ -89,8 +90,8 @@ concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 		v.description = v.description or ""
 		v.print_name = v.print_name or ""
 		note(k)
-		note("\tName: " .. v.print_name or "")
-		note("\tDescription: " .. v.description or "")
+		note("\tName: " .. (v.print_name or ""))
+		note("\tDescription: " .. (v.description or ""))
 	end
 
 	note("listing server LUA modules")
