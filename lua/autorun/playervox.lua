@@ -1025,7 +1025,7 @@ hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
 				return
 			end
 
-			mod:EmitAction(pot_ply, spcc .. "_killed")
+			mod:EmitAction(pot_ply, spcc .. "_killed", PVoxSendDamageOnce:GetBool())
 			ent:SetNWBool("Spotted", false)
 		end
 	end
