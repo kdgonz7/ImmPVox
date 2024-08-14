@@ -1046,8 +1046,10 @@ end)
 -- we instead run spotted on entities TAKING DAMAGE
 -- this sounds way better in practice and makes for a
 -- much less immersion breaking game.
+--- @param ent Entity
+--- @param dm CTakeDamageInfo
 hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
-	---@type Player
+	---@class Player
 	local pot_ply = dm:GetAttacker()
 	if ! pot_ply:IsPlayer() then return end
 
@@ -1056,6 +1058,7 @@ hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
 	local mod = PVox:GetPlayerModule(pot_ply)
 
 	if ! mod then return end
+	if ! dm:IsDamageType(DMG_BULLET) then return end
 	if ! ent:IsNextBot() and ! ent:IsNPC() and ! ent:IsRagdoll() then return end
 
 	local spcc = "enemy"
