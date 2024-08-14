@@ -1110,13 +1110,28 @@ hook.Add("OnNPCKilled", "PlayerVoxOnNPCKilled", function(npc, attacker, inflicto
 	end
 end)
 
+--- 
+--- @param ent Entity
+--- @param dm CTakeDamageInfo
+hook.Add("EntityTakeDamage", "PlayerVoxOnDamage", function (ent, dm)
+	local is_general_damage = ! (dm:IsDamageType(DMG_BULLET))
+	if ! is_general_damage then return end
+
+
+	local m = PVox:GetPlayerModule(ent)
+	if ! m then return end
+
+	-- general damage action here
+	m:EmitAction(ent, "take_damage")
+end)
+
 hook.Add("ScalePlayerDamage", "PlayerVoxPlayerShouldTakeDamage", function(ply, hitgroup, dmginfo)
 	if ! IsValid(ply) then return end
 
 	local mod = PVox:GetPlayerModule(ply)
 	if ! mod then return end
 
-	local chance = math.random(1, 5) == 1
+	local chance = math.random(1, 1) == 1
 
 	if ! ply:InVehicle() and chance then
 		if PVoxLocalizeDamage:GetBool() then
