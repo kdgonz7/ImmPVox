@@ -63,4 +63,20 @@
 
 			Combo:SetValue( "combine-soldier" )
 		end )
+
+		---@param panel DForm
+		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXINFO", "#Info", "", "", function( panel )
+			panel:ClearControls()
+			
+			panel:ControlHelp("These are informations about the current server's configurations.")
+			
+			local mod_count = 0
+
+			for k, v in pairs(PVox.Modules) do
+				mod_count = mod_count + 1
+			end
+			panel:ControlHelp("")
+
+			panel:ControlHelp("Number of modules: " .. mod_count)
+		end )
 	end )
