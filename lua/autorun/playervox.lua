@@ -77,6 +77,7 @@ local PVoxUsePlayerModelBinds    = CreateConVar("pvox_useplayermodelbinds", "1",
 local PVoxLocalizeDamage         = CreateConVar("pvox_localizedamage", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxSpecifyEntity          = CreateConVar("pvox_specifyotherentity", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxSendDamageOnce         = CreateConVar("pvox_senddamageonce", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxLocalizationLang       = CreateConVar("pvox_localizationlang", "en_US", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 	if ! PVoxAllowNotes then
@@ -178,6 +179,27 @@ function PVox:GetPlayerModule(player_ob)
 	if m then return m else return nil end
 end
 
+---
+---@param name string
+function PVox:EnableCC(name)
+	if ! name then return end
+	if ! PVox.Modules[name] then return end
+
+	PVox.Modules[name].CCEnabled = true
+end
+
+function PVox:ImplementCC(lang, mod, audio_str, sent)
+	if ! PVox.Modules[mod] then return end
+	if ! PVox.Modules[mod].cc then return end
+	if ! PVox.Modules[mod].cc[lang] then
+		PVox.Modules[mod].cc[lang] = {}
+	end
+
+	PVox.Modules[mod].cc[lang][audio_str] = sent
+
+	note("[CCv8] added " .. audio_str .. " to " .. lang .. " for " .. mod)
+end
+
 --* NOTE if you're using glualint,
 --* this entire section is a bunch of warnings. ignore them.
 --* this is for the PVOX class.
@@ -197,7 +219,10 @@ function PVox:ImplementModule(name, imp_func)
 
 	if PVox.Modules[name] == true and name then	-- new in 0.4 - we create the module on the fly
 		PVox.Modules[name] = {}
-		PVox.Modules[name]["actions"] = {}
+		PVox.Modules[name]["actions"]   = {}
+		PVox.Modules[name]["callouts"]  = {}
+		PVox.Modules[name]["cc"]        = {}
+		PVox.Modules[name].CCEnabled    = false
 
 		local module_folder = "pvox/" .. name -- sound/pvox/MODNAME will be used
 
@@ -310,6 +335,15 @@ function PVox:ImplementModule(name, imp_func)
 
 			self:SetCachedSound(ply, rand_sound)
 			self:PlaySoundSafe(ply, rand_sound, dur + new_time)
+
+			if (PVox.Modules[name].CCEnabled) then
+				print(rand_sound)
+				-- sends to chat the CC of the audio string
+				local ccstr = PVox.Modules[name].cc[PVoxLocalizationLang:GetString()][rand_sound]
+				if ! ccstr then return end
+
+				PrintMessage(HUD_PRINTTALK, ply:Nick() .. ": " .. ccstr)
+			end
 		end,
 
 		PlaySoundSafe = function(self, ply, sound, time)
@@ -988,6 +1022,8 @@ hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
 	---@type Player
 	local pot_ply = dm:GetAttacker()
 	if ! pot_ply:IsPlayer() then return end
+
+	if ent == pot_ply then return end
 
 	local mod = PVox:GetPlayerModule(pot_ply)
 
