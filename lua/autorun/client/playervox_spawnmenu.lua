@@ -5,7 +5,7 @@
 	hook.Add( "PopulateToolMenu", "Cat232", function()
 		---
 		---@param panel DForm
-		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXSettings", "#PVOX Settings", "", "", function( panel )
+		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXSettings", "#Settings", "", "", function( panel )
 			panel:ClearControls()
 
 			if LocalPlayer():IsSuperAdmin() then
@@ -24,18 +24,29 @@
 				panel:CheckBox("Only call kill-confirms once", "pvox_senddamageonce")
 				panel:ControlHelp( "Throttles shooting dead bodies to having it call out only once." )
 
-				panel:CheckBox("Localization Language", "pvox_localizationlang")
-				panel:ControlHelp( "The GLOBAL language for PVOX CC. This IS A SERVER SIDE VALUE. Defaults to en-US, and different languages can depend on how the module implements them." )
-
 				panel:CheckBox("Enable CC (Closed Captions)", "pvox_useclosedcaptioning")
 				panel:ControlHelp( "Enables printing audio files to the chat, from a player, as they're being played. Similar to Counter-Strike games." )
 
-				panel:CheckBox( "Allow Notes", "pvox_allownotes" )
-				panel:CheckBox( "Suppress Warnings", "pvox_suppresswarnings" )
+				panel:TextEntry("Localization Language", "pvox_localizationlang")
+				panel:ControlHelp( "The GLOBAL language for PVOX CC. This IS A SERVER SIDE VALUE. Defaults to en-US, and different languages can depend on how the module implements them." )
 			end
-
+		end )
+		---@param panel DForm
+		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXDebug", "#Debug", "", "", function( panel )
+			panel:ClearControls()
+			if LocalPlayer():IsSuperAdmin() then
+				panel:CheckBox( "Allow Notes", "pvox_allownotes" )
+				panel:ControlHelp("Allows PVox to send server-side notes. They usually appear in the console, in the form of [PVox] <MESSAGE>.")
+				panel:CheckBox( "Suppress Warnings", "pvox_suppresswarnings" )
+				panel:ControlHelp("Suppresses PVox warnings. Good if you want a silent terminal, but recommended to be on if you want to debug PVOX.")
+			end
+		end )
+		---@param panel DForm
+		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXVOX", "#VOX", "", "", function( panel )
+			panel:ClearControls()
+			
 			---@class DComboBox
-			local Combo = panel:ComboBox( "PVOX Preset", "pvox_mypreset" )
+			local Combo = panel:ComboBox( "PVOX Preset", "" )
 			panel:ControlHelp( "Change your current PVOX preset. Will stop on respawn unless Use 'Player Model Binds' is off." )
 
 			for k, v in pairs(PVox.Modules) do
@@ -51,6 +62,5 @@
 			end
 
 			Combo:SetValue( "combine-soldier" )
-
 		end )
 	end )
