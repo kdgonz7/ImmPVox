@@ -47,7 +47,7 @@
 			
 			---@class DComboBox
 			local Combo = panel:ComboBox( "PVOX Preset", "" )
-			panel:ControlHelp( "Change your current PVOX preset. Will stop on respawn unless Use 'Player Model Binds' is off." )
+			panel:ControlHelp( "Change your current PVOX preset in realtime. To use your playermodel bind, you can set your preset to `none`, and then reset your character." )
 
 			for k, v in pairs(PVox.Modules) do
 				Combo:AddChoice( k )
