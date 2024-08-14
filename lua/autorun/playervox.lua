@@ -1,4 +1,4 @@
-local PVOX_VersionStr = "pvox-v7.5-git-a1a470a"
+local PVOX_VersionStr = "pvox-v8-git-a1a470a"
 
 --[[ GMod Utility Scripts ]]
 -- PlayerVox
@@ -145,11 +145,12 @@ function PVox:MinimumRequired(ver, msg, modname)
 	end
 
 	local vers = string.Replace(ver, "pvox-v", "")
-	local our_vers = string.sub(PVOX_VersionStr, 7, -13)
+	local our_vers = string.sub(PVOX_VersionStr, 7, -13) -- don't count the pvox-v or the decimal
 
 	local vers_n = tonumber(vers)
 	local our_vers_n = tonumber(our_vers)
-
+	print(vers_n)
+	print(our_vers)
 	if ! vers_n or ! our_vers_n then
 		error ("PVox:MinimumRequired was called with an invalid version number!")
 	end
