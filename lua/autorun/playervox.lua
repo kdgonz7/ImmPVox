@@ -984,6 +984,7 @@ end)
 -- this sounds way better in practice and makes for a
 -- much less immersion breaking game.
 hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
+	---@type Player
 	local pot_ply = dm:GetAttacker()
 	if ! pot_ply:IsPlayer() then return end
 
@@ -1011,6 +1012,8 @@ hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
 		ent:SetNWBool("Spotted", true)
 		mod:EmitAction(pot_ply, spcc .. "_spotted")
 	elseif ent:Health() <= 0 then
+		mod:StopEmit(pot_ply)
+		pot_ply:StopSound(mod:GetCachedSound(pot_ply))
 		mod:EmitAction(pot_ply, spcc .. "_killed", true)
 	end
 end)
