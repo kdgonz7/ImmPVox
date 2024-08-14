@@ -24,6 +24,7 @@ net.Receive("PVox_OpenCalloutPanel", function()
 	end
 
 	local callouts = net.ReadString()
+---@diagnostic disable-next-line: cast-local-type
 	callouts = util.JSONToTable(callouts)
 
 	PrintTable(callouts)
