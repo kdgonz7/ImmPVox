@@ -869,14 +869,14 @@ end
 
 if CLIENT then return end
 hook.Add("PlayerInitialSpawn", "StartPlayerValues", function(ply)
-	ply:SetNWString("vox_preset", "combinesoldier")
+	ply:SetNWString("vox_preset", "none")
 	ply:SetNWBool("vox_enabled", true)
 	ply:SetNWBool("PVOX_Emitting", false)
 	ply:SetNWString("PVOX_CachedSound", "")
 
 	-- loaded network stuff, we're good.
 
-	PVOX_LoadPresets()
+	-- PVOX_LoadPresets()
 end)
 
 hook.Add("PlayerSpawn", "StartPlayerPresetByModel", function(ply)
