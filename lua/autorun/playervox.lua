@@ -317,8 +317,7 @@ function PVox:ImplementModule(name, imp_func)
 		EmitAction = function(self, ply, action, override, new_time)
 			if ! IsValid(ply) then return end
 			if CLIENT then return end
-			local r = hook.Run("PVOX_EmitAction", ply, action, override, new_time) or true
-			
+			local r = hook.Run("PVOX_EmitAction", ply, action, override, new_time)
 			if r == false then
 				return
 			end
