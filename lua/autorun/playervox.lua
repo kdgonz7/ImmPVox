@@ -88,6 +88,8 @@ local PVoxUseCC                  = CreateConVar("pvox_useclosedcaptioning", "1",
 local PVoxEnableReloadChancePatch = CreateConVar("pvox_patch_reload", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxReloadChance            = CreateConVar("pvox_patch_reload_chance", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
+local PVoxEnableFootstepsPatch    = CreateConVar("pvox_patch_footsteps", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 	if ! PVoxAllowNotes:GetBool() then
 		print("hi! if you're seeing this then it means you have pvox_allownotes set to 0. which means the server modules won't print")
@@ -268,9 +270,12 @@ function PVox:ImplementModule(name, imp_func)
 
 	if PVox.Modules[name] == true and name then	-- new in 0.4 - we create the module on the fly
 		PVox.Modules[name] = {}
+
 		PVox.Modules[name]["actions"]   = {}
 		PVox.Modules[name]["callouts"]  = {}
 		PVox.Modules[name]["cc"]        = {}
+		PVox.Modules[name]["footsteps"] = {}
+
 		PVox.Modules[name].CCEnabled    = false
 
 		local module_folder = "pvox/" .. name -- sound/pvox/MODNAME will be used
@@ -293,8 +298,6 @@ function PVox:ImplementModule(name, imp_func)
 				PVox.Modules[name]["actions"][v][#PVox.Modules[name]["actions"][v] + 1] = module_folder .. "/actions/" .. v .. "/" .. v2
 			end
 		end
-		--* this is uncommented on Steam Workshop version
-		-- PrintTable(PVox.Modules[name])
 	end
 
 	if ! name then
@@ -1172,6 +1175,46 @@ hook.Add("OnNPCKilled", "PlayerVoxOnNPCKilled", function(npc, attacker, inflicto
 
 		if mod then
 			mod:EmitAction(attacker, "enemy_killed")
+		end
+	end
+end)
+
+local PLC_PlayerSoundTable = {
+	[0]            = "concrete",
+	[MAT_CONCRETE] = "concrete",
+    [MAT_TILE] = "concrete",
+    [MAT_METAL] = "concrete",
+    [MAT_GRASS] = "grass",
+    [MAT_DEFAULT] = "dirt",
+    [MAT_SNOW] = "dirt",
+    [MAT_DIRT] = "dirt",
+    [MAT_WOOD] = "wood",
+    [MAT_GRATE] = "wood",
+    [MAT_GLASS] = "glass",
+    [MAT_FLESH] = "mud",
+}
+
+-- ripped from unused addon PLC, for player sound tables.
+-- adds a quick trace to get the surface material under player.
+local function PLC_GetSurfaceMaterial(ply)
+    if ! IsValid(ply) then return end
+
+
+    local ppos = ply:GetPos()
+    local ft = util.QuickTrace(ppos + Vector(0,0,35), ppos - Vector(0, 0, 20), ply)
+
+	return PLC_PlayerSoundTable[ft.MatType or 0] -- 0: concrete
+end
+
+-- adds player footsteps
+hook.Add("PlayerFootstep", "PlayerVoxOnFootstep", function (ply, pos, foot, sound, volume, filter)
+	local plyMod = PVox:GetPlayerModule(ply)
+
+	if plyMod then
+		local surf = PLC_GetSurfaceMaterial(ply)
+
+		if plyMod:HasAction(ply, "player_footstep_" .. surf) then
+			plyMod:EmitAction(ply, "player_footstep_" .. surf)
 		end
 	end
 end)
