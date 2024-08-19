@@ -78,7 +78,6 @@ local PVoxSpecifyEntity          = CreateConVar("pvox_specifyotherentity", "0", 
 local PVoxSendDamageOnce         = CreateConVar("pvox_senddamageonce", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxGlobalLocalizationLang = CreateConVar("pvox_gl_localizationlang", "en_US", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxGlobalVolume           = CreateConVar("pvox_gl_volume", "511", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-local PVoxGlobalFootstepVolume   = CreateConVar("pvox_gl_footstepvolume", "75", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxUseCC                  = CreateConVar("pvox_useclosedcaptioning", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 --[[
@@ -91,6 +90,7 @@ local PVoxEnableReloadChancePatch = CreateConVar("pvox_patch_reload", "1", {FCVA
 local PVoxReloadChance            = CreateConVar("pvox_patch_reload_chance", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 local PVoxEnableFootstepsPatch    = CreateConVar("pvox_patch_footsteps", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxGlobalFootstepVolume    = CreateConVar("pvox_patch_footsteps_gl_footstepvolume", "75", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 	if ! PVoxAllowNotes:GetBool() then
@@ -174,8 +174,7 @@ function PVox:MinimumRequired(ver, msg, modname)
 
 	local vers_n = tonumber(vers)
 	local our_vers_n = tonumber(our_vers)
-	print(vers_n)
-	print(our_vers)
+
 	if ! vers_n or ! our_vers_n then
 		error ("PVox:MinimumRequired was called with an invalid version number!")
 	end
@@ -1261,6 +1260,8 @@ end
 
 -- adds player footsteps
 hook.Add("PlayerFootstep", "PlayerVoxOnFootstep", function (ply, pos, foot, sound, volume, filter)
+	if PVoxEnableFootstepsPatch:GetBool() == false then return false end
+
 	local plyMod = PVox:GetPlayerModule(ply)
 
 	if plyMod then
