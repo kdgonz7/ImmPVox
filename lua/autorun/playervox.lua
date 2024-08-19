@@ -991,10 +991,22 @@ hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 			if mod then
 				if ply:GetAmmoCount(wep:GetPrimaryAmmoType()) == 0 then mod:EmitAction(ply, "no_ammo") return end
 
+				-- PVox Reload Chance Patch
 				if PVoxEnableReloadChancePatch:GetBool() then
-					if math.random(1, PVoxReloadChance:GetInt()) == 1 then
+					--- @type any
+					local cond = math.random(1, PVoxReloadChance:GetInt())
+
+					-- add a note for comparison
+					note(cond .. " == 1")
+
+					-- reset it
+					cond = cond == 1
+
+					-- if true then reload
+					if cond then
 						mod:EmitAction(ply, "reload")
 					end
+
 					-- otherwise, discard
 				else
 					mod:EmitAction(ply, "reload")
