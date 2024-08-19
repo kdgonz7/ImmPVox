@@ -16,6 +16,10 @@ ImmPVox is an **Im**ediate **M**ode **P**layer **Vo**ice module, a Garry's Mod V
 
 Because I couldn't wrap my head around existing VOX mods. Therefore I created my own, which is simple to use and contains a spawn menu entry to make it easier for the average user to change their VOX and modify internals.
 
+## Note For Developers
+
+Please, when developing, use the **STEAM** version of the PVox addon. As that version has the latest *stable* release of PVox. Any new API changes are meant to be documented, so if you are on the main branch(head) unstable version which does not contain any documentation, or certain features that are a W.I.P/Incomplete, be prepared for some nasty bugs. But do report them to the *Issues* tab. 
+
 ## Included Modules (w/ THIS REPOSITORY)
 
 * SCP-049
