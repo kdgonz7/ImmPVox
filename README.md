@@ -29,3 +29,7 @@ Please, when developing, use the **STEAM** version of the PVox addon. As that ve
 * Counter-Strike: Source
 * Counter-Strike 2: SAS Operator
 * Counter-Strike 2: Phoenix Connexion Operator
+
+## Credits
+
+* PVox takes a part of it's codebase from **PLConv**, a player sound framework that's similar to PVox that was never released.
