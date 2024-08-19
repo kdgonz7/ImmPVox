@@ -20,6 +20,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+      - uses: leafo/gh-actions-lua@v10
 
       # Runs a single command using the runners shell
       - name: Sanity Check
