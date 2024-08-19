@@ -1,0 +1,1 @@
+[ ! -f /MANUAL.md ] && echo "could not find manual, sanity failed" && exit 1
