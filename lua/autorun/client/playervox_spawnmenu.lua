@@ -8,7 +8,7 @@ hook.Add( "PopulateToolMenu", "Cat232", function()
 	---
 	---@param panel DForm
 	spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXSettings", "#Regular Settings", "", "", function( panel )
-		panel:ClearControls()
+		panel:Clear()
 
 		if LocalPlayer():IsSuperAdmin() then
 			panel:CheckBox( "PVOX Enabled", "pvox_enabled" )
@@ -36,7 +36,7 @@ hook.Add( "PopulateToolMenu", "Cat232", function()
 
 	---@param panel DForm
 	spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXDebug", "#Debug Settings", "", "", function( panel )
-		panel:ClearControls()
+		panel:Clear()
 		if LocalPlayer():IsSuperAdmin() then
 			panel:CheckBox( "Allow Notes", "pvox_allownotes" )
 			panel:ControlHelp("Allows PVox to send server-side notes. They usually appear in the console, in the form of [PVox] <MESSAGE>.")
@@ -47,7 +47,7 @@ hook.Add( "PopulateToolMenu", "Cat232", function()
 
 	---@param panel DForm
 	spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXPatches", "#Server Patches", "", "", function( panel )
-		panel:ClearControls()
+		panel:Clear()
 		panel:ControlHelp("Patches are similar to modules, in that they implement code that originally wasn't in PVox before. They work by being separated branches of code via a condition, that runs if they're checked off. This allows for these console variables to control the behaviour of PVox, without having to mess with the core VOX pipeline.")
 		panel:ControlHelp("")
 		if LocalPlayer():IsSuperAdmin() then
@@ -67,7 +67,7 @@ hook.Add( "PopulateToolMenu", "Cat232", function()
 
 	---@param panel DForm
 	spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXVOX", "#VOX Controls", "", "", function( panel )
-		panel:ClearControls()
+		panel:Clear()
 		
 		---@class DComboBox
 		local Combo = panel:ComboBox( "PVOX Preset", "" )
@@ -90,7 +90,7 @@ hook.Add( "PopulateToolMenu", "Cat232", function()
 
 	---@param panel DForm
 	spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXINFO", "#Server Information", "", "", function( panel )
-		panel:ClearControls()
+		panel:Clear()
 		
 		panel:ControlHelp("These are informations about the current server's configurations.")
 		
