@@ -408,7 +408,12 @@ function PVox:ImplementModule(name, imp_func)
 
 			if (PVox.Modules[name].CCEnabled) then
 				-- sends to chat the CC of the audio string
+
+				if ! PVox.Modules[name].cc then return end
+				if ! PVox.Modules[name].cc[PVoxGlobalLocalizationLang:GetString()] then return end
+
 				local ccstr = PVox.Modules[name].cc[PVoxGlobalLocalizationLang:GetString()][rand_sound]
+
 				if ! ccstr then return end
 				if ! PVoxUseCC:GetBool() then return end
 
