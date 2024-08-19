@@ -81,7 +81,7 @@ local PVoxGlobalVolume           = CreateConVar("pvox_gl_volume", "511", {FCVAR_
 local PVoxUseCC                  = CreateConVar("pvox_useclosedcaptioning", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 --[[
-    Patches
+	Patches
 		(AKA) "Modules", but integrated within the addon itself. These are 100% optional and come with their own
 		set of options. PVox will never add anything behind the user's back. All calls are 100% FLOSS
 ]]
@@ -1275,25 +1275,25 @@ end)
 local PLC_PlayerSoundTable = {
 	[0]            = "concrete",
 	[MAT_CONCRETE] = "concrete",
-    [MAT_TILE] = "concrete",
-    [MAT_METAL] = "concrete",
-    [MAT_GRASS] = "grass",
-    [MAT_DEFAULT] = "dirt",
-    [MAT_SNOW] = "dirt",
-    [MAT_DIRT] = "dirt",
-    [MAT_WOOD] = "wood",
-    [MAT_GRATE] = "wood",
-    [MAT_GLASS] = "glass",
-    [MAT_FLESH] = "mud",
+	[MAT_TILE] = "concrete",
+	[MAT_METAL] = "concrete",
+	[MAT_GRASS] = "grass",
+	[MAT_DEFAULT] = "dirt",
+	[MAT_SNOW] = "dirt",
+	[MAT_DIRT] = "dirt",
+	[MAT_WOOD] = "wood",
+	[MAT_GRATE] = "wood",
+	[MAT_GLASS] = "glass",
+	[MAT_FLESH] = "mud",
 }
 
 -- ripped from unused addon PLC, for player sound tables.
 -- adds a quick trace to get the surface material under player.
 local function PLC_GetSurfaceMaterial(ply)
-    if ! IsValid(ply) then return end
+	if ! IsValid(ply) then return end
 
-    local ppos = ply:GetPos()
-    local ft = util.QuickTrace(ppos + Vector(0,0,35), ppos - Vector(0, 0, 20), ply)
+	local ppos = ply:GetPos()
+	local ft = util.QuickTrace(ppos + Vector(0,0,35), ppos - Vector(0, 0, 20), ply)
 
 	return PLC_PlayerSoundTable[ft.MatType or 0] -- 0: concrete
 end
