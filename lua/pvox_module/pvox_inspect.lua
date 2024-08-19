@@ -17,11 +17,6 @@
 AddCSLuaFile()
 
 ---@diagnostic disable-next-line: param-type-mismatch
-local InspectKey = CreateConVar("pvox_inspect_module_key", KEY_F, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-
-if SERVER then
-	util.AddNetworkString("PVox_Inspect")
-end
 
 if ! PVox then
 	-- for mods, this is recommended
@@ -36,13 +31,21 @@ if SERVER then
 	-- we're using a singular net message here,
 	-- there's a lot of other ways to do this
 	-- this is the one i found the most efficient
-	net.Receive("PVox_Inspect", function(len, ply)
-		local pmod = PVox:GetModule(ply:GetNWString("vox_preset", "none"))
-		pmod:EmitAction(ply, "inspect")
+
+	--- @param ply Player
+	hook.Add("PlayerButtonDown", "PVox_Inspect", function(ply, btn)
+		local InspectKey = ply:GetInfo("pvox_inspect_module_key")
+
+		if btn == tonumber(InspectKey) then
+			local pmod = PVox:GetModule(ply:GetNWString("vox_preset", "none"))
+			pmod:EmitAction(ply, "inspect")
+		end
 	end)
 end
 
 if CLIENT then
+	local InspectKey = CreateConVar("pvox_inspect_module_key", KEY_F, {FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_USERINFO})
+
 	hook.Add( "PopulateToolMenu", "ZCat232", function()
 		---
 		---@param panel DForm
@@ -50,16 +53,10 @@ if CLIENT then
 			panel:ClearControls()
 
 			panel:KeyBinder( "PVOX Inspect Key", "pvox_inspect_module_key" )
+
 			panel:ControlHelp( "You can set the keybind for this module here." )
 			panel:ControlHelp("")
 			panel:ControlHelp("PVox Inspect Module v0.0.2")
 		end )
 	end )
-
-	hook.Add("KeyPress", "PVox_Inspect", function(ply, key)
-		if input.IsKeyDown(InspectKey:GetInt()) then
-			net.Start("PVox_Inspect")
-			net.SendToServer()
-		end
-	end)
 end
