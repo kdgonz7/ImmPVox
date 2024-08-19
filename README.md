@@ -1,11 +1,13 @@
 <div align="center">
-    <h1>Imm-PVox</h1>
+    <h2>Imm-PVox</h2>
     <br>
     <i>A small, compact Garry's Mod Player Sound mod</i>
     <br>
     <br>
     <img src="https://img.shields.io/badge/status-stable-green">
 </div>
+
+<hr>
 
 ImmPVox is an **Im**ediate **M**ode **P**layer **Vo**ice module, a Garry's Mod VOX addon with immediate readiness (hence the name) and support for a multitude of actions, with a very extensible API. It works by providing an interface for running audio files in a single swing. This keeps the player's voice in the loop while maintaining the feel of other VOX addons.
 
