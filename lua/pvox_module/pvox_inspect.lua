@@ -44,7 +44,7 @@ if SERVER then
 end
 
 if CLIENT then
-	local InspectKey = CreateConVar("pvox_inspect_module_key", KEY_F, {FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_USERINFO})
+	CreateConVar("pvox_inspect_module_key", KEY_F, {FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_USERINFO})
 
 	hook.Add( "PopulateToolMenu", "ZCat232", function()
 		---
