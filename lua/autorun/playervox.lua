@@ -77,6 +77,7 @@ local PVoxLocalizeDamage         = CreateConVar("pvox_localizedamage", "0", {FCV
 local PVoxSpecifyEntity          = CreateConVar("pvox_specifyotherentity", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxSendDamageOnce         = CreateConVar("pvox_senddamageonce", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxGlobalLocalizationLang = CreateConVar("pvox_gl_localizationlang", "en_US", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxGlobalVolume           = CreateConVar("pvox_gl_volume", "511", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxUseCC                  = CreateConVar("pvox_useclosedcaptioning", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 --[[
@@ -282,6 +283,7 @@ function PVox:ImplementModule(name, imp_func)
 
 		note("creating module for " .. name)
 		local _,dirs = file.Find("sound/" .. module_folder .. "/actions/*", "GAME")
+		local _,fdirs = file.Find("sound/" .. module_folder .. "/footsteps/*", "GAME")
 
 		if ! dirs then
 			warn("structure incorrect. failed to create module")
@@ -296,6 +298,20 @@ function PVox:ImplementModule(name, imp_func)
 
 			for _, v2 in pairs(afiles) do
 				PVox.Modules[name]["actions"][v][#PVox.Modules[name]["actions"][v] + 1] = module_folder .. "/actions/" .. v .. "/" .. v2
+			end
+		end
+
+		-- literally reusing code lmfao
+		for k, v in pairs(fdirs) do
+			note("found footstep pack " .. v)
+
+			PVox.Modules[name]["footsteps"][v] = {}
+
+			local afiles, _ = file.Find("sound/" .. module_folder .. "/footsteps/" .. v .. "/*." .. ext, "GAME")
+
+			for _, v2 in pairs(afiles) do
+				-- found a footstep sound, we add it to the list
+				PVox.Modules[name]["footsteps"][v][#PVox.Modules[name]["footsteps"][v] + 1] = module_folder .. "/footsteps/" .. v .. "/" .. v2
 			end
 		end
 	end
@@ -388,7 +404,6 @@ function PVox:ImplementModule(name, imp_func)
 			self:PlaySoundSafe(ply, rand_sound, dur + new_time)
 
 			if (PVox.Modules[name].CCEnabled) then
-				print(rand_sound)
 				-- sends to chat the CC of the audio string
 				local ccstr = PVox.Modules[name].cc[PVoxGlobalLocalizationLang:GetString()][rand_sound]
 				if ! ccstr then return end
@@ -420,6 +435,28 @@ function PVox:ImplementModule(name, imp_func)
 			end)()
 		end,
 
+		EmitFoostep = function(self, ply, surface_mat)
+			if ! IsValid(ply) then return end
+			if CLIENT then return end
+			
+			-- since this is supposed to be ran from playerfootstep hook
+			-- we don't need as many bounds checks
+
+			if ! PVox.Modules[name] or ! PVox.Modules[name]["foostep"] then return end
+
+			local us = PVox.Modules[name]["foostep"][surface_mat]
+
+			if ! us then
+				us = PVox.Modules[name]["foostep"]["default"] or nil
+			end
+
+			if istable(us) and us != nil then
+				local rand_sound = us[math.random(1, #us)]
+				ply:EmitSound(rand_sound, PVoxGlobalVolume:GetInt())
+			end
+		end,
+
+		---@param ply Player
 		PlaySoundSafe = function(self, ply, sound, time)
 			if CLIENT then return end
 			if self:IsEmitting(ply) then return end
@@ -428,7 +465,7 @@ function PVox:ImplementModule(name, imp_func)
 
 			ply:SetNWBool("PVOX_Emitting", true)
 
-			ply:EmitSound(sound, 511)
+			ply:EmitSound(sound, PVoxGlobalVolume:GetInt())
 
 			timer.Simple(time, function()
 				if ! IsValid(ply) then return end
@@ -1199,7 +1236,6 @@ local PLC_PlayerSoundTable = {
 local function PLC_GetSurfaceMaterial(ply)
     if ! IsValid(ply) then return end
 
-
     local ppos = ply:GetPos()
     local ft = util.QuickTrace(ppos + Vector(0,0,35), ppos - Vector(0, 0, 20), ply)
 
@@ -1213,9 +1249,7 @@ hook.Add("PlayerFootstep", "PlayerVoxOnFootstep", function (ply, pos, foot, soun
 	if plyMod then
 		local surf = PLC_GetSurfaceMaterial(ply)
 
-		if plyMod:HasAction(ply, "player_footstep_" .. surf) then
-			plyMod:EmitAction(ply, "player_footstep_" .. surf)
-		end
+		plyMod:EmitFoostep(ply, surf)
 	end
 end)
 
