@@ -61,6 +61,18 @@ function PVox:SaveBlackList() end
 --- @return nil
 function PVOX_LoadPresets() end
 
+--- Verifies every parameter passed in and returns `true` if all of them are NOT nil.
+--- 
+--- ```lua
+--- if PVOX_Verify(1, 2, 3, nil) then
+---     print("this will never run")
+--- else
+---     print("the only viable option")
+--- end
+--- ```
+--- @param ... unknown
+function PVOX_Verify(...) end
+
 --- Implements `name` using `imp_func`, which should return a table, or a boolean and an extension string.
 --- 
 --- @see PVOX_ModuleBaseClass
