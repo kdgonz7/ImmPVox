@@ -78,6 +78,7 @@ local PVoxSpecifyEntity          = CreateConVar("pvox_specifyotherentity", "0", 
 local PVoxSendDamageOnce         = CreateConVar("pvox_senddamageonce", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxGlobalLocalizationLang = CreateConVar("pvox_gl_localizationlang", "en_US", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxGlobalVolume           = CreateConVar("pvox_gl_volume", "511", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxGlobalFootstepVolume   = CreateConVar("pvox_gl_footstepvolume", "75", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxUseCC                  = CreateConVar("pvox_useclosedcaptioning", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 --[[
@@ -441,10 +442,9 @@ function PVox:ImplementModule(name, imp_func)
 			
 			-- since this is supposed to be ran from playerfootstep hook
 			-- we don't need as many bounds checks
-			PrintTable(PVox.Modules[name])
-			print((PVox.Modules[name]["footsteps"] == nil))
+
 			if (! PVox.Modules[name]) or (PVox.Modules[name]["footsteps"] == nil) then return end
-			print("play")
+
 			local us = PVox.Modules[name]["footsteps"][surface_mat]
 
 			if ! us then
@@ -454,7 +454,7 @@ function PVox:ImplementModule(name, imp_func)
 			if istable(us) and us != nil then
 				local rand_sound = us[math.random(1, #us)]
 
-				ply:EmitSound(rand_sound, PVoxGlobalVolume:GetInt())
+				ply:EmitSound(rand_sound, PVoxGlobalFootstepVolume:GetInt())
 
 				return true
 			end
