@@ -1,3 +1,5 @@
-[ ! -f ./doc/MANUAL.md ] && echo "stopped at MANUAL.md" && exit 1
+if [ ! -f ./doc/MANUAL.md ]; then
+    exit 1
+end
 
 exit 0
