@@ -1278,13 +1278,13 @@ local PLC_PlayerSoundTable = {
 	[MAT_TILE] = "concrete",
 	[MAT_METAL] = "concrete",
 	[MAT_GRASS] = "grass",
+	[MAT_SNOW] = "snow",
 	[MAT_DEFAULT] = "dirt",
-	[MAT_SNOW] = "dirt",
 	[MAT_DIRT] = "dirt",
 	[MAT_WOOD] = "wood",
-	[MAT_GRATE] = "wood",
+	[MAT_GRATE] = "grate",
 	[MAT_GLASS] = "glass",
-	[MAT_FLESH] = "mud",
+	[MAT_FLESH] = "flesh",
 }
 
 -- ripped from unused addon PLC, for player sound tables.
