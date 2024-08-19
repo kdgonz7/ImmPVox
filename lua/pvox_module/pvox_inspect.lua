@@ -43,12 +43,11 @@ if SERVER then
 end
 
 if CLIENT then
-	hook.Add( "PopulateToolMenu", "Cat232", function()
+	hook.Add( "PopulateToolMenu", "ZCat232", function()
 		---
 		---@param panel DForm
-		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXSettings", "#Regular Settings", "", "", function( panel )
+		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXInspect", "#Inspect Module", "", "", function( panel )
 			panel:ClearControls()
-	
 
 			panel:KeyBinder( "PVOX Inspect Key", "pvox_inspect_module_key" )
 			panel:ControlHelp( "You can set the keybind for this module here." )
@@ -58,7 +57,7 @@ if CLIENT then
 	end )
 
 	hook.Add("KeyPress", "PVox_Inspect", function(ply, key)
-		if input.IsKeyDown(InspectKey) then
+		if input.IsKeyDown(InspectKey:GetInt()) then
 			net.Start("PVox_Inspect")
 			net.SendToServer()
 		end
