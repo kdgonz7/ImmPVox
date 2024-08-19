@@ -86,7 +86,7 @@ local PVoxUseCC                  = CreateConVar("pvox_useclosedcaptioning", "1",
 ]]
 
 local PVoxEnableReloadChancePatch = CreateConVar("pvox_patch_reload", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-local PVoxReloadChance = CreateConVar("pvox_patch_reload_chance", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxReloadChance            = CreateConVar("pvox_patch_reload_chance", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 	if ! PVoxAllowNotes:GetBool() then
