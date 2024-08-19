@@ -76,7 +76,7 @@ local PVoxUsePlayerModelBinds    = CreateConVar("pvox_useplayermodelbinds", "1",
 local PVoxLocalizeDamage         = CreateConVar("pvox_localizedamage", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxSpecifyEntity          = CreateConVar("pvox_specifyotherentity", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxSendDamageOnce         = CreateConVar("pvox_senddamageonce", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-local PVoxLocalizationLang       = CreateConVar("pvox_localizationlang", "en_US", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxGlobalLocalizationLang = CreateConVar("pvox_gl_localizationlang", "en_US", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxUseCC                  = CreateConVar("pvox_useclosedcaptioning", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 --[[
@@ -374,7 +374,7 @@ function PVox:ImplementModule(name, imp_func)
 			if (PVox.Modules[name].CCEnabled) then
 				print(rand_sound)
 				-- sends to chat the CC of the audio string
-				local ccstr = PVox.Modules[name].cc[PVoxLocalizationLang:GetString()][rand_sound]
+				local ccstr = PVox.Modules[name].cc[PVoxGlobalLocalizationLang:GetString()][rand_sound]
 				if ! ccstr then return end
 				if ! PVoxUseCC:GetBool() then return end
 
