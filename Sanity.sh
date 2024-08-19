@@ -1,5 +1,5 @@
 if [ ! -f ./doc/MANUAL.md ]; then
     exit 1
-end
+fi
 
 exit 0
