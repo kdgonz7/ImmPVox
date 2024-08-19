@@ -46,6 +46,20 @@ hook.Add( "PopulateToolMenu", "Cat232", function()
 	end )
 
 	---@param panel DForm
+	spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXPatches", "#Server Patches", "", "", function( panel )
+		panel:ClearControls()
+		panel:ControlHelp("Patches are similar to modules, in that they implement code that originally wasn't in PVox before. They work by being separated branches of code via a condition, that runs if they're checked off. This allows for these console variables to control the behaviour of PVox, without having to mess with the core VOX pipeline.")
+		panel:ControlHelp("")
+		if LocalPlayer():IsSuperAdmin() then
+			panel:CheckBox("Reload Chances", "pvox_patch_reload")
+			panel:ControlHelp("This patch reworks the reload code to add a random chance to callout a reload, as opposed to having a callout on every single reload press.")
+
+			panel:NumSlider("Reload Chance", "pvox_patch_reload_chance", 1, 100, 0)
+			panel:ControlHelp("How rare should it be to callout a reload?")
+		end
+	end )
+
+	---@param panel DForm
 	spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXVOX", "#VOX Controls", "", "", function( panel )
 		panel:ClearControls()
 		
