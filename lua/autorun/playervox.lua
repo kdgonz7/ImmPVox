@@ -150,6 +150,8 @@ function PVOX_Verify(...)
 			return false
 		end
 	end
+
+	return true
 end
 
 function PVox:MinimumRequired(ver, msg, modname)
