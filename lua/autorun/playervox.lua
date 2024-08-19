@@ -435,19 +435,20 @@ function PVox:ImplementModule(name, imp_func)
 			end)()
 		end,
 
-		EmitFoostep = function(self, ply, surface_mat)
+		EmitFootstep = function(self, ply, surface_mat)
 			if ! IsValid(ply) then return end
 			if CLIENT then return end
 			
 			-- since this is supposed to be ran from playerfootstep hook
 			-- we don't need as many bounds checks
-
-			if ! PVox.Modules[name] or ! PVox.Modules[name]["foostep"] then return end
-
-			local us = PVox.Modules[name]["foostep"][surface_mat]
+			PrintTable(PVox.Modules[name])
+			print((PVox.Modules[name]["footsteps"] == nil))
+			if (! PVox.Modules[name]) or (PVox.Modules[name]["footsteps"] == nil) then return end
+			print("play")
+			local us = PVox.Modules[name]["footsteps"][surface_mat]
 
 			if ! us then
-				us = PVox.Modules[name]["foostep"]["default"] or nil
+				us = PVox.Modules[name]["footsteps"]["default"] or nil
 			end
 
 			if istable(us) and us != nil then
@@ -698,6 +699,17 @@ PVox:ImplementModule("combinesoldier", function(ply)
 				""
 			}
 		},
+
+		["footsteps"] = {
+			["default"] = {
+				"npc/combine_soldier/gear1.wav",
+				"npc/combine_soldier/gear2.wav",
+				"npc/combine_soldier/gear3.wav",
+				"npc/combine_soldier/gear4.wav",
+				"npc/combine_soldier/gear5.wav",
+				"npc/combine_soldier/gear6.wav",
+			}
+		}
 	}
 end)
 
@@ -1254,7 +1266,7 @@ hook.Add("PlayerFootstep", "PlayerVoxOnFootstep", function (ply, pos, foot, soun
 	if plyMod then
 		local surf = PLC_GetSurfaceMaterial(ply)
 
-		if ! plyMod:EmitFoostep(ply, surf) then return false else return true end
+		if ! plyMod:EmitFootstep(ply, surf) then return false else return true end
 	end
 end)
 
