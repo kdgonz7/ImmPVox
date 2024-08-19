@@ -56,6 +56,9 @@ hook.Add( "PopulateToolMenu", "Cat232", function()
 
 			panel:NumSlider("Reload Chance", "pvox_patch_reload_chance", 1, 100, 0)
 			panel:ControlHelp("How rare should it be to callout a reload?")
+
+			panel:CheckBox("VOX-Specific Footstep SFX", "pvox_patch_footsteps")
+			panel:ControlHelp("This patch implements footstep sounds that can be added by the VOX preset as opposed to the default footstep sounds. (NOTE: This may not be comptaible with EVERYTHING)")
 		end
 	end )
 
