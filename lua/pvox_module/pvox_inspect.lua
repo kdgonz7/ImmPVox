@@ -16,6 +16,9 @@
 
 AddCSLuaFile()
 
+---@diagnostic disable-next-line: param-type-mismatch
+local InspectKey = CreateConVar("pvox_inspect_module_key", KEY_F, {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+
 if SERVER then
 	util.AddNetworkString("PVox_Inspect")
 end
@@ -40,8 +43,22 @@ if SERVER then
 end
 
 if CLIENT then
+	hook.Add( "PopulateToolMenu", "Cat232", function()
+		---
+		---@param panel DForm
+		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXSettings", "#Regular Settings", "", "", function( panel )
+			panel:ClearControls()
+	
+
+			panel:KeyBinder( "PVOX Inspect Key", "pvox_inspect_module_key" )
+			panel:ControlHelp( "You can set the keybind for this module here." )
+			panel:ControlHelp("")
+			panel:ControlHelp("PVox Inspect Module v0.0.2")
+		end )
+	end )
+
 	hook.Add("KeyPress", "PVox_Inspect", function(ply, key)
-		if input.IsKeyDown(KEY_F) then
+		if input.IsKeyDown(InspectKey) then
 			net.Start("PVox_Inspect")
 			net.SendToServer()
 		end
