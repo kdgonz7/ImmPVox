@@ -79,6 +79,15 @@ local PVoxSendDamageOnce         = CreateConVar("pvox_senddamageonce", "1", {FCV
 local PVoxLocalizationLang       = CreateConVar("pvox_localizationlang", "en_US", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxUseCC                  = CreateConVar("pvox_useclosedcaptioning", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
+--[[
+    Patches
+		(AKA) "Modules", but integrated within the addon itself. These are 100% optional and come with their own
+		set of options. PVox will never add anything behind the user's back. All calls are 100% FLOSS
+]]
+
+local PVoxEnableReloadChancePatch = CreateConVar("pvox_patch_reload", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxReloadChance = CreateConVar("pvox_patch_reload_chance", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 	if ! PVoxAllowNotes:GetBool() then
 		print("hi! if you're seeing this then it means you have pvox_allownotes set to 0. which means the server modules won't print")
@@ -981,7 +990,15 @@ hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 
 			if mod then
 				if ply:GetAmmoCount(wep:GetPrimaryAmmoType()) == 0 then mod:EmitAction(ply, "no_ammo") return end
-				mod:EmitAction(ply, "reload")
+
+				if PVoxEnableReloadChancePatch:GetBool() then
+					if math.random(1, PVoxReloadChance:GetInt()) == 1 then
+						mod:EmitAction(ply, "reload")
+					end
+					-- otherwise, discard
+				else
+					mod:EmitAction(ply, "reload")
+				end
 			end
 		end
 	end
