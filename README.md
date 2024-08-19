@@ -1,5 +1,5 @@
 <div align="center">
-    <h2>Imm-PVox</h2>
+    <h1>Imm-PVox</h1>
     <br>
     <i>A small, compact Garry's Mod Player Sound mod</i>
     <br>
