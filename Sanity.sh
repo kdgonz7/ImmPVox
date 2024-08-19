@@ -1,1 +1,1 @@
-[ ! -f /MANUAL.md ] && echo "could not find manual, sanity failed" && exit 1
+[ ! -f ./doc/MANUAL.md ] && echo "stopped at MANUAL.md" && exit 1
