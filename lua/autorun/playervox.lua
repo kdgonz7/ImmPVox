@@ -92,6 +92,9 @@ local PVoxReloadChance            = CreateConVar("pvox_patch_reload_chance", "1"
 local PVoxEnableFootstepsPatch    = CreateConVar("pvox_patch_footsteps", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxGlobalFootstepVolume    = CreateConVar("pvox_patch_footsteps_gl_footstepvolume", "75", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
+local PVoxEnableLowAmmoPatch      = CreateConVar("pvox_patch_no_ammo_reload", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxCallNoAmmoInsteadOfRld  = CreateConVar("pvox_patch_no_ammo_reload_call_no_ammo_instead", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 	if ! PVoxAllowNotes:GetBool() then
 		print("hi! if you're seeing this then it means you have pvox_allownotes set to 0. which means the server modules won't print")
@@ -1105,7 +1108,39 @@ hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 			end
 		end
 	end
+
+	
 end)
+
+-- hook.Add("Think", "LowAmmoThink", function()
+-- 	if PVoxEnableLowAmmoPatch:GetBool() then
+-- 		--- @type Weapon
+-- 		local wep = ply:GetActiveWeapon()
+
+-- 		if ! IsValid(wep) then
+-- 			warn("tried to call built-in module reload with no active weapon. non-fatal.")
+-- 			return
+-- 		end
+
+-- 		timer.Simple(0.1, function()
+-- 			if ! IsValid(ply) then return end
+-- 			if ! IsValid(wep) then return end
+
+-- 			if ply:GetAmmoCount(wep:GetPrimaryAmmoType()) == 0 then
+-- 				local mod = PVox:GetPlayerModule(ply)
+-- 				if ! mod then return end
+-- 				local needed_action = "reload"
+
+-- 				if PVoxCallNoAmmoInsteadOfRld:GetBool() then
+-- 					needed_action = "no_ammo"
+-- 				end
+
+-- 				mod:EmitAction(ply, needed_action)
+-- 			end
+-- 		end)
+
+-- 	end
+-- end)
 
 -- we use a simple kill confirm bind instead of automatic detection.
 -- this just feels better when playing
