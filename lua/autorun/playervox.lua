@@ -141,6 +141,17 @@ function PVox:GetTotalSoundCount(modu)
 	return final
 end
 
+function PVOX_Verify(...)
+	local arg_count = select('#', ...)
+
+	for i = 1, arg_count do
+		local arg = select(i, ...)
+		if ! IsValid(arg) or arg == nil then
+			return false
+		end
+	end
+end
+
 function PVox:MinimumRequired(ver, msg, modname)
 	-- will error if the PVox_VersionStr does not match ver.
 	-- ver should be in the format "v<whatever version number>, and if the version does not match it will error."
@@ -380,6 +391,28 @@ function PVox:ImplementModule(name, imp_func)
 
 				PrintMessage(HUD_PRINTTALK, ply:Nick() .. ": " .. ccstr)
 			end
+		end,
+
+		-- Like EmitAction, but plays `x2` if `x1` does not exist.
+		-- e.g. EmitActionFallback2(ply, "zombie_killed", "enemy_killed")
+		EmitActionFallback2 = function(self, ply, x1, x2, override, _time)
+			return (! PVOX_Verify(ply, x1, x2, override, _time)) or (function()
+				local m = PVox:GetPlayerModule(ply)
+
+				-- verify m exists
+				if PVOX_Verify(m) then
+					-- verify x1 exists
+					if ! m:HasAction(ply, x1) then
+						-- if x1 does not exist, emit x2
+						m:EmitAction(ply, x2, override, _time)
+					else
+						-- if x1 exists, just emit x1
+						m:EmitAction(ply, x1, override, _time)
+					end
+				else
+					return
+				end
+			end)()
 		end,
 
 		PlaySoundSafe = function(self, ply, sound, time)
