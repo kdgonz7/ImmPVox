@@ -452,8 +452,13 @@ function PVox:ImplementModule(name, imp_func)
 
 			if istable(us) and us != nil then
 				local rand_sound = us[math.random(1, #us)]
+
 				ply:EmitSound(rand_sound, PVoxGlobalVolume:GetInt())
+
+				return true
 			end
+
+			return false
 		end,
 
 		---@param ply Player
@@ -1249,7 +1254,7 @@ hook.Add("PlayerFootstep", "PlayerVoxOnFootstep", function (ply, pos, foot, soun
 	if plyMod then
 		local surf = PLC_GetSurfaceMaterial(ply)
 
-		plyMod:EmitFoostep(ply, surf)
+		if ! plyMod:EmitFoostep(ply, surf) then return false else return true end
 	end
 end)
 
