@@ -60,6 +60,9 @@ hook.Add( "PopulateToolMenu", "Cat232", function()
 			panel:CheckBox("VOX-Specific Footstep SFX", "pvox_patch_footsteps")
 			panel:ControlHelp("This patch implements footstep sounds that can be added by the VOX preset as opposed to the default footstep sounds. (NOTE: This may not be comptaible with EVERYTHING)")
 
+			panel:CheckBox("Extended Actions", "pvox_patch_extended_action")
+			panel:ControlHelp("Enables extended action calls. Adds actions like `use`, `jump`, and `melee-kill`")
+
 			panel:NumSlider("Footstep Global Volume", "pvox_patch_footsteps_gl_footstepvolume", 0, 511, 0)
 			panel:ControlHelp("How loud do you want footsteps to be?")
 		end
