@@ -1271,8 +1271,6 @@ hook.Add("OnNPCKilled", "PlayerVoxNicePatch", function (npc, attacker, inflictor
 	if ! PVoxExtendedActions:GetBool() then return end
 	if ! attacker:IsNPC() then return end
 
-	print("Found")
-
 	--- @type PVOX_ModuleBaseClass
 	local pmod = PVox:GetPlayerModule(attacker)
 	if ! pmod then return end
@@ -1283,7 +1281,6 @@ hook.Add("OnNPCKilled", "PlayerVoxNicePatch", function (npc, attacker, inflictor
 	--- @param ent Entity
 	for _, ent in pairs(ents_in_rad) do
 		if ! ent:IsPlayer() then continue end
-		print("found a player")
 		if ! attacker.Disposition then continue end
 		
 		if attacker:Disposition(ent) != D_HT && ent:Visible(npc) then
