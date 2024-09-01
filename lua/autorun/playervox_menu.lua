@@ -16,7 +16,7 @@ local outlinetextcol = Color(25, 25, 25, 192)
 local textspacing = 0.6
 
 surface.CreateFont("pvox_radi", {
-	font = "Iosevka", -- Use the font-name which is shown to you by your operating system Font Viewer, not the file name
+	font = "Iosevka Fixed Curly Semibold", -- Use the font-name which is shown to you by your operating system Font Viewer, not the file name
 	extended = false,
 	size = 30,
 	weight = 750,
