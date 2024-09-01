@@ -56,7 +56,7 @@ if CLIENT then
 			panel:ControlHelp("")
 			panel:ControlHelp( "You can set the keybind for this module here." )
 			panel:ControlHelp("")
-			panel:ControlHelp("PVox Inspect Module v0.0.2 (compiled with PVox" .. PVOX_VersionStr .. ")")
+			panel:ControlHelp("PVox Inspect Module v0.0.2 (compiled with " .. PVOX_VersionStr .. ")")
 		end )
 	end )
 end
