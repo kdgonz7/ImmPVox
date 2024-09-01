@@ -364,7 +364,7 @@ function PVox:ImplementModule(name, imp_func)
 
 			if CLIENT then return end
 
-			if PVoxGlobalRNGPatch:GetInt() > 0 then
+			if PVoxGlobalRNGPatch:GetInt() > 1 then
 				if math.random(0, PVoxGlobalRNGPatch:GetInt()) != 1 then
 					return
 				end
