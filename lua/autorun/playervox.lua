@@ -1059,8 +1059,6 @@ hook.Add("PlayerCanPickupWeapon", "PlayerVoxPickupSound", function(ply, wep)
 			mod:EmitAction(ply, "pickup_weapon")
 		end
 	end
-
-	return true
 end)
 
 -- hook.Add("WeaponEquip", "W", function(wep, own)
@@ -1146,36 +1144,6 @@ hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 
 	
 end)
-
--- hook.Add("Think", "LowAmmoThink", function()
--- 	if PVoxEnableLowAmmoPatch:GetBool() then
--- 		--- @type Weapon
--- 		local wep = ply:GetActiveWeapon()
-
--- 		if ! IsValid(wep) then
--- 			warn("tried to call built-in module reload with no active weapon. non-fatal.")
--- 			return
--- 		end
-
--- 		timer.Simple(0.1, function()
--- 			if ! IsValid(ply) then return end
--- 			if ! IsValid(wep) then return end
-
--- 			if ply:GetAmmoCount(wep:GetPrimaryAmmoType()) == 0 then
--- 				local mod = PVox:GetPlayerModule(ply)
--- 				if ! mod then return end
--- 				local needed_action = "reload"
-
--- 				if PVoxCallNoAmmoInsteadOfRld:GetBool() then
--- 					needed_action = "no_ammo"
--- 				end
-
--- 				mod:EmitAction(ply, needed_action)
--- 			end
--- 		end)
-
--- 	end
--- end)
 
 -- we use a simple kill confirm bind instead of automatic detection.
 -- this just feels better when playing
