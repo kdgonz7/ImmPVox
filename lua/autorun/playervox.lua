@@ -853,15 +853,7 @@ PVox:ImplementModule("cs2-phoenix", function(ply)
 		["print_name"] = "CS2 Phoenix Connexion VOX (Ported)",
 		["description"] = "A port of (most) Counter-Strike 2 Terrorist voice lines.",
 		["callouts"] = {
-			["Need Help!"] = {
-				"playervox/modules/phoenix/taunt/radio_needbackup01.wav",
-				"playervox/modules/phoenix/taunt/radio_needbackup02.wav",
-				"playervox/modules/phoenix/taunt/radio_needbackup03.wav",
-				"playervox/modules/phoenix/taunt/radio_needbackup05.wav",
-				"playervox/modules/phoenix/taunt/radio_needbackup06.wav",
-			},
-
-			["Need Help 2"] = {
+			["Need Backup"] = {
 				"playervox/modules/phoenix/taunt/radio_needbackup01.wav",
 				"playervox/modules/phoenix/taunt/radio_needbackup02.wav",
 				"playervox/modules/phoenix/taunt/radio_needbackup03.wav",
