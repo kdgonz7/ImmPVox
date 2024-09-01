@@ -214,3 +214,11 @@ PVOX_ModuleBaseClass.PlaySoundSafe = function(self, ply, sound, time) end
 --- @param ply Player
 --- @param callout string
 PVOX_ModuleBaseClass.PlayCallout = function(self, ply, callout) end
+
+--- ## PVOX Verification
+--- 
+--- To verify multiple objects, with `nil` checks, you can use
+--- this function.
+--- 
+--- @param ... any        items to be checked
+function PVOX_Verify(...) end
