@@ -92,8 +92,7 @@ local PVoxReloadChance            = CreateConVar("pvox_patch_reload_chance", "1"
 local PVoxEnableFootstepsPatch    = CreateConVar("pvox_patch_footsteps", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxGlobalFootstepVolume    = CreateConVar("pvox_patch_footsteps_gl_footstepvolume", "75", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
-local PVoxEnableLowAmmoPatch      = CreateConVar("pvox_patch_no_ammo_reload", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-local PVoxCallNoAmmoInsteadOfRld  = CreateConVar("pvox_patch_no_ammo_reload_call_no_ammo_instead", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxExtendedActions         = CreateConVar("pvox_patch_extended_action", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 	if ! PVoxAllowNotes:GetBool() then
@@ -429,6 +428,7 @@ function PVox:ImplementModule(name, imp_func)
 
 				-- verify m exists
 				if PVOX_Verify(m) then
+					if m == nil then return end
 					-- verify x1 exists
 					if ! m:HasAction(ply, x1) then
 						-- if x1 does not exist, emit x2
@@ -513,8 +513,38 @@ function PVox:ImplementModule(name, imp_func)
 				sound = sound[math.random(1, #sound)]
 			end
 
-			self:PlaySoundSafe(ply, sound, 0)
-		end
+			local dur = SoundDuration(sound)
+
+			if dur == 60 then
+				dur = 0.5
+			end
+
+			self:SetCachedSound(ply, sound)
+			self:PlaySoundSafe(ply, sound, dur)
+
+			if (PVox.Modules[name].CCEnabled) then
+				-- sends to chat the CC of the audio string
+
+				if ! PVox.Modules[name].cc then return end
+				if ! PVox.Modules[name].cc[PVoxGlobalLocalizationLang:GetString()] then return end
+
+				local ccstr = PVox.Modules[name].cc[PVoxGlobalLocalizationLang:GetString()][sound]
+
+				if ! ccstr then return end
+				if ! PVoxUseCC:GetBool() then return end
+
+				PrintMessage(HUD_PRINTTALK, ply:Nick() .. ": " .. ccstr)
+			end
+		end,
+
+		GetCalloutCount = function(self)
+			return table.Count(PVox.Modules[name]["callouts"])
+		end,
+
+		GetCallouts = function(self)
+			return PVox.Modules[name]["callouts"]
+		end,
+
 	}, false)
 
 	local addTo = hook.Run("PVOX_ModuleBaseClass", name) or {}
@@ -1268,6 +1298,37 @@ hook.Add("OnNPCKilled", "PlayerVoxOnNPCKilled", function(npc, attacker, inflicto
 
 		if mod then
 			mod:EmitAction(attacker, "enemy_killed")
+		end
+	end
+end)
+
+--- @param npc NPC
+--- @param attacker NPC
+--- @param inflictor Entity
+hook.Add("OnNPCKilled", "PlayerVoxNicePatch", function (npc, attacker, inflictor)
+	if ! IsValid(npc) then return end
+	if ! IsValid(attacker) then return end
+	if ! PVoxExtendedActions:GetBool() then return end
+	if ! attacker:IsNPC() then return end
+
+	print("Found")
+
+	--- @type PVOX_ModuleBaseClass
+	local pmod = PVox:GetPlayerModule(attacker)
+	if ! pmod then return end
+
+
+	local ents_in_rad = ents.FindInSphere(attacker:GetPos() + Vector(0, 0, 32), 300)
+
+	--- @param ent Entity
+	for _, ent in pairs(ents_in_rad) do
+		if ! ent:IsPlayer() then continue end
+		print("found a player")
+		if ! attacker.Disposition then continue end
+		
+		if attacker:Disposition(ent) != D_HT && ent:Visible(npc) then
+			-- if we don't hate them, then tell them nice shot
+			pmod:EmitAction(ent, "nice_shot")
 		end
 	end
 end)
