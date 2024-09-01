@@ -50,13 +50,13 @@ if CLIENT then
 		---
 		---@param panel DForm
 		spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXInspect", "#Inspect Module", "", "", function( panel )
-			panel:ClearControls()
+			panel:Clear()
 
 			panel:KeyBinder( "PVOX Inspect Key", "pvox_inspect_module_key" )
-
+			panel:ControlHelp("")
 			panel:ControlHelp( "You can set the keybind for this module here." )
 			panel:ControlHelp("")
-			panel:ControlHelp("PVox Inspect Module v0.0.2")
+			panel:ControlHelp("PVox Inspect Module v0.0.2 (compiled with PVox" .. PVOX_VersionStr .. ")")
 		end )
 	end )
 end
