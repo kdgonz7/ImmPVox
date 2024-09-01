@@ -1,2 +1,0 @@
-# The PVox Naming Convention
-
