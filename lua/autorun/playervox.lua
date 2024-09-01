@@ -92,6 +92,8 @@ local PVoxReloadChance            = CreateConVar("pvox_patch_reload_chance", "1"
 local PVoxEnableFootstepsPatch    = CreateConVar("pvox_patch_footsteps", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxGlobalFootstepVolume    = CreateConVar("pvox_patch_footsteps_gl_footstepvolume", "75", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
+local PVoxGlobalRNGPatch          = CreateConVar("pvox_global_rng", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+
 local PVoxExtendedActions         = CreateConVar("pvox_patch_extended_action", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
@@ -359,8 +361,17 @@ function PVox:ImplementModule(name, imp_func)
 
 		EmitAction = function(self, ply, action, override, new_time)
 			if ! IsValid(ply) then return end
+
 			if CLIENT then return end
+
+			if PVoxGlobalRNGPatch:GetInt() > 0 then
+				if math.random(0, PVoxGlobalRNGPatch:GetInt()) != 1 then
+					return
+				end
+			end
+
 			local r = hook.Run("PVOX_EmitAction", ply, action, override, new_time)
+
 			if r == false then
 				return
 			end
