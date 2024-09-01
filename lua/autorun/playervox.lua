@@ -1,4 +1,4 @@
-local PVOX_VersionStr = "pvox-v8-git-71da691"
+PVOX_VersionStr = "pvox-v9-git-71da691"
 
 -- PlayerVox (PVOX)
 -- Give players a voice!
