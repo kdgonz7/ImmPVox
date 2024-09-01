@@ -107,9 +107,29 @@ function PVox:ImplementCC(lang, mod, audio_str, sent) end
 --- @param modname string   The name of the module
 function PVox:MinimumRequired(ver, msg, modname) end
 
+--- Cleans all blank modules from the actiontable registry. This function was originally used when modules had created extra, empty
+--- tables on the side via `ImplementModule`.
+--- 
+--- **Since** 1.0
+function PVox:CleanBlankModules() end
+
 --- @class PVOX_ModuleBaseClass
---- The default PVOX module class. 
---- It's used by `PVox:ImplementModule` to implement and use a module.
+--- ## Module Base Class
+--- It's used by `PVox:ImplementModule` to implement and use a module. PVox uses a registry that tags modules via name, similar to TFA-VOX, however
+--- when creating a module, this class isn't accessed directly, as instances of this class are returned by `PVox:ImplementModule`
+--- 
+--- ```lua
+--- PVox:ImplementModule("my_handle" /* or 'mdlprefix' */, {
+---     return {
+---         ['actions'] = {
+---             ['pickup_weapon'] = {}
+---             /* .... */
+---         }
+---     }
+--- })
+--- ```
+--- 
+--- @see PVox.ImplementModule 
 PVOX_ModuleBaseClass = PVOX_ModuleBaseClass or {}
 
 --- Emits an action. Similar to @`ply:EmitSound`, it will emit the sound from the player's module's soundtable.
