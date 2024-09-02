@@ -18,7 +18,7 @@ local textspacing = 0.6
 surface.CreateFont("pvox_radi", {
 	font = "Anonymous Pro", -- Use the font-name which is shown to you by your operating system Font Viewer, not the file name
 	extended = false,
-	size = 30,
+	size = 25,
 	weight = 100,
 	blursize = 0,
 	scanlines = 0,
@@ -164,15 +164,15 @@ local function DrawMenu()
 	end
 end
 
-hook.Add("HUDPaint", "PVox_Radial", DrawMenu)
-
-local function ShouldDrawRadial()
+-- hook.Add("HUDPaint", "PVox_Radial", DrawMenu)
+hook.Add("HUDPaint", "0_shoulddraw", function()
 	if PVoxMenuOpen then
 		DrawMenu()
 	end
-end
+end)
 
-hook.Add("HUDPaint", "TFAVOX_Callouts_Radial_RD", ShouldDrawRadial)
+
+
 
 local function Radial()
 	PVoxMenuOpen = !PVoxMenuOpen
