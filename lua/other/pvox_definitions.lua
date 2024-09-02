@@ -90,6 +90,15 @@ function PVox:GetPlayerModule(player_obj) end
 --- @param name string
 function PVox:EnableCC(name) end
 
+--- Generates a table with similar file names. E.g. if you have multiple audio files that are in the format a1.wav, a2.wav, a3.wav, you can
+--- use this function to, instead of writing them all out, create a table that automatically generates the names.
+---@param amount number      how many names you want to generates
+---@param common_name string the common name between all of the files
+---@param ext string         the common extension between all the files
+---@param zeroes boolean     should zeroes be appended to the filenames < 10? (e.g. a01.wav instead of a1.wav)
+---@param prefix string      an (optional) appended prefix for the numbers. e.g. a_01.wav, '_' is the prefix. To disable it, use "" as the prefix for a name like a01.wav
+function PVox:GenerateSimilarNames(amount, common_name, ext, zeroes, prefix) end
+
 --- Adds the audio_str to the Closed Captions for module `mod`, in language `lang`. `sent` will be printed
 --- while the audio is playing.
 --- @param lang string
