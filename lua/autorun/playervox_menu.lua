@@ -122,8 +122,8 @@ local function DrawMenu()
 	drawFilledCircle(scrw / 2, scrh / 2, radius + 2, 64)
 
 	for i = 0, 2 do
-		surface.DrawCircle(scrw / 2, scrh / 2, innerradius - i, Color(col2.r, col2.g, col2.b, circlebordercol.a))
-		surface.DrawCircle(scrw / 2, scrh / 2, radius + i, Color(col2.r, col2.g, col2.b, circlebordercol.a))
+		-- surface.DrawCircle(scrw / 2, scrh / 2, innerradius - i, Color(col2.r, col2.g, col2.b, circlebordercol.a))
+		-- surface.DrawCircle(scrw / 2, scrh / 2, radius + i, Color(col2.r, col2.g, col2.b, circlebordercol.a))
 	end
 
 	local textareawidth = math.abs(math.sin(math.rad(arcdegrees))) * radius * math.pow(textspacing, 2) * 1.5
@@ -158,9 +158,9 @@ local function DrawMenu()
 		d = d - arcdegrees - padding
 
 		surface.SetDrawColor(Color(col2.r, col2.g, col2.b, linebordercol.a))
-		surface.DrawLine(scrw / 2 + math.cos(math.rad(d)) * innerradius,
-			scrh / 2 - math.sin(math.rad(d)) * innerradius, scrw / 2 + math.cos(math.rad(d)) * radius,
-			scrh / 2 - math.sin(math.rad(d)) * radius)
+		-- surface.DrawLine(scrw / 2 + math.cos(math.rad(d)) * innerradius,
+		-- 	scrh / 2 - math.sin(math.rad(d)) * innerradius, scrw / 2 + math.cos(math.rad(d)) * radius,
+		-- 	scrh / 2 - math.sin(math.rad(d)) * radius)
 	end
 end
 
