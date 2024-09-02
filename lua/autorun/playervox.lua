@@ -232,7 +232,7 @@ end
 
 --- Returns the player's current module based on their internal `vox_preset`.
 ---@param player_obj Player  the actual player
----@return PVOX_ModuleBaseClass mod the module
+---@return PVOX_ModuleBaseClass|nil mod the module
 function PVox:GetPlayerModule(player_obj)
 	local ppr = player_obj:GetNWString("vox_preset", "none")
 	local m = PVox.Modules[ppr]
@@ -1283,18 +1283,13 @@ hook.Add("OnNPCKilled", "PlayerVoxOnNPCKilled", function(npc, attacker, inflicto
 end)
 
 --- @param npc NPC
---- @param attacker NPC
+--- @param attacker Player
 --- @param inflictor Entity
 hook.Add("OnNPCKilled", "PlayerVoxNicePatch", function (npc, attacker, inflictor)
 	if ! IsValid(npc) then return end
 	if ! IsValid(attacker) then return end
 	if ! PVoxExtendedActions:GetBool() then return end
 	if ! attacker:IsNPC() then return end
-
-	--- @type PVOX_ModuleBaseClass
-	local pmod = PVox:GetPlayerModule(attacker)
-	if ! pmod then return end
-
 
 	local ents_in_rad = ents.FindInSphere(attacker:GetPos() + Vector(0, 0, 32), 300)
 
