@@ -214,6 +214,13 @@ function PVox:SaveBlackList()
 	-- saves the black list.
 end
 
+--- Sets the callout table to `tab` in module `name_string`.
+function PVox:ImplementModuleCallouts(name_string, tab)
+	if ! PVox.Modules[name_string] then return end
+
+	PVox.Modules[name_string].callouts = tab
+end
+
 function PVox:Mount()
 	note("Mounting PVox simple modules!")
 
