@@ -98,7 +98,6 @@ local function DrawMenu()
 	local arcdegrees = (360 / count) - padding
 
 	local radius = math.min(scrw * 0.5 / 2, scrh * 0.75 / 1) * 0.75
-	local innerradius = radius / 8
 
 	local d = 360
 
@@ -170,9 +169,6 @@ hook.Add("HUDPaint", "0_shoulddraw", function()
 		DrawMenu()
 	end
 end)
-
-
-
 
 local function Radial()
 	PVoxMenuOpen = !PVoxMenuOpen
