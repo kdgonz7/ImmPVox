@@ -1,3 +1,5 @@
+-- i will remove this soon tfa-vox owner. sorry.
+
 ---@diagnostic disable: missing-parameter
 if SERVER then return end
 
