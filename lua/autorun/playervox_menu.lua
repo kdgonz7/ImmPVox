@@ -19,7 +19,7 @@ surface.CreateFont("pvox_radi", {
 	font = "Iosevka Fixed Curly Semibold", -- Use the font-name which is shown to you by your operating system Font Viewer, not the file name
 	extended = false,
 	size = 30,
-	weight = 750,
+	weight = 100,
 	blursize = 0,
 	scanlines = 0,
 	antialias = true,
@@ -88,8 +88,8 @@ local function DrawMenu()
 		return val1 < val2
 	end)
 
-	local col = ply:GetPlayerColor() * 100
-	local col2 = ply:GetPlayerColor() * 255
+	local col = Color(54, 54, 54)
+	local col2 = Color(54, 54, 54)
 
 	local scrw, scrh = ScrW(), ScrH()
 
