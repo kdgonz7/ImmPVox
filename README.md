@@ -33,3 +33,4 @@ Please, when developing, use the **STEAM** version of the PVox addon. As that ve
 ## Credits
 
 * PVox takes a part of it's codebase from **PLConv**, a player sound framework that's similar to PVox that was never released.
+* PVox is inspired by, yet not very closely related to *TFA-VOX*, a separate VOX mod.
