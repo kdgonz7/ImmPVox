@@ -1,6 +1,7 @@
 PVOX_VersionStr = "pvox-v9-git-71da691"
 
--- PlayerVox (PVOX)
+-- # PlayerVox (PVOX)
+--
 -- Give players a voice!
 --
 --
@@ -229,13 +230,16 @@ function PVox:Mount()
 	note("finished loading, found " .. c .. " modules.")
 end
 
-function PVox:GetPlayerModule(player_ob)
-	local ppr = player_ob:GetNWString("vox_preset", "none")
+--- Returns the player's current module based on their internal `vox_preset`.
+---@param player_obj Player  the actual player
+---@return PVOX_ModuleBaseClass|nil mod the module
+function PVox:GetPlayerModule(player_obj)
+	local ppr = player_obj:GetNWString("vox_preset", "none")
 	local m = PVox.Modules[ppr]
 	if m then return m else return nil end
 end
 
----
+--- Enables closed-captioning. A system designed to make your life and communication easier.
 ---@param name string
 function PVox:EnableCC(name)
 	if ! name then return end
@@ -562,6 +566,10 @@ function PVox:ImplementModule(name, imp_func)
 	local addTo = hook.Run("PVOX_ModuleBaseClass", name) or {}
 
 	table.Merge(PVox.Modules[name], addTo)
+end
+
+function PVox:Version()
+	return PVOX_VersionStr
 end
 
 function PVox:GetModule(name)
@@ -1275,18 +1283,13 @@ hook.Add("OnNPCKilled", "PlayerVoxOnNPCKilled", function(npc, attacker, inflicto
 end)
 
 --- @param npc NPC
---- @param attacker NPC
+--- @param attacker Player
 --- @param inflictor Entity
 hook.Add("OnNPCKilled", "PlayerVoxNicePatch", function (npc, attacker, inflictor)
 	if ! IsValid(npc) then return end
 	if ! IsValid(attacker) then return end
 	if ! PVoxExtendedActions:GetBool() then return end
 	if ! attacker:IsNPC() then return end
-
-	--- @type PVOX_ModuleBaseClass
-	local pmod = PVox:GetPlayerModule(attacker)
-	if ! pmod then return end
-
 
 	local ents_in_rad = ents.FindInSphere(attacker:GetPos() + Vector(0, 0, 32), 300)
 
