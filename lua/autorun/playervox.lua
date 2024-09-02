@@ -257,7 +257,7 @@ function PVox:ImplementCC(lang, mod, audio_str, sent)
 
 	PVox.Modules[mod].cc[lang][audio_str] = sent
 
-	note("[CCv8] added " .. audio_str .. " to " .. lang .. " for " .. mod)
+	note("[CCv9] added " .. audio_str .. " to " .. lang .. " for " .. mod)
 end
 
 --* NOTE if you're using glualint,
