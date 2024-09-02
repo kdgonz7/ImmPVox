@@ -80,6 +80,19 @@ function PVOX_Verify(...) end
 ---@param imp_func function
 function PVox:ImplementModule(name, imp_func) end
 
+--- Adds the audio_str to the Closed Captions for module `mod`, in language `lang`. `sent` will be printed
+--- while the audio is playing.
+--- @param lang string
+--- @param mod string
+--- @param audio_str string
+--- @param sent string
+function PVox:ImplementCC(lang, mod, audio_str, sent) end
+
+--- Sets `name_string`'s callouts table to `tab`.
+--- @param name_string string
+--- @param tab table
+function PVox:ImplementModuleCallouts(name_string, tab) end
+
 --- Returns the player's module. Gets the `player_obj`'s networked string, `vox_preset`.
 --- @param player_obj Player
 --- @nodiscard
@@ -98,14 +111,6 @@ function PVox:EnableCC(name) end
 ---@param zeroes boolean     should zeroes be appended to the filenames < 10? (e.g. a01.wav instead of a1.wav)
 ---@param prefix string      an (optional) appended prefix for the numbers. e.g. a_01.wav, '_' is the prefix. To disable it, use "" as the prefix for a name like a01.wav
 function PVox:GenerateSimilarNames(amount, common_name, ext, zeroes, prefix) end
-
---- Adds the audio_str to the Closed Captions for module `mod`, in language `lang`. `sent` will be printed
---- while the audio is playing.
---- @param lang string
---- @param mod string
---- @param audio_str string
---- @param sent string
-function PVox:ImplementCC(lang, mod, audio_str, sent) end
 
 --- Errors if ver is not met. `ver` is a string that is in the format of `pvox-v[...]`, where `[...]` is the version number. e.g. pvox-v3.
 --- It then parses this input and checks it against the currently installed version. While, this isn't the best way to do it,
