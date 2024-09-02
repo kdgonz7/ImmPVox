@@ -230,13 +230,16 @@ function PVox:Mount()
 	note("finished loading, found " .. c .. " modules.")
 end
 
-function PVox:GetPlayerModule(player_ob)
-	local ppr = player_ob:GetNWString("vox_preset", "none")
+--- Returns the player's current module based on their internal `vox_preset`.
+---@param player_obj Player  the actual player
+---@return PVOX_ModuleBaseClass mod the module
+function PVox:GetPlayerModule(player_obj)
+	local ppr = player_obj:GetNWString("vox_preset", "none")
 	local m = PVox.Modules[ppr]
 	if m then return m else return nil end
 end
 
----
+--- Enables closed-captioning. A system designed to make your life and communication easier.
 ---@param name string
 function PVox:EnableCC(name)
 	if ! name then return end
