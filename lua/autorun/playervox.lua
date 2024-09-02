@@ -290,14 +290,16 @@ function PVox:ImplementModule(name, imp_func)
 		local module_folder = "pvox/" .. name -- sound/pvox/MODNAME will be used
 
 		note("creating module for " .. name)
+
 		local _,dirs = file.Find("sound/" .. module_folder .. "/actions/*", "GAME")
 		local _,fdirs = file.Find("sound/" .. module_folder .. "/footsteps/*", "GAME")
+		local _,cdirs = file.Find("sound/" .. module_folder .. "/callouts/*", "GAME")
 
 		if ! dirs then
 			warn("structure incorrect. failed to create module")
 		end
 
-		for k, v in pairs(dirs) do
+		for _, v in pairs(dirs) do
 			note("found module pack " .. v)
 
 			PVox.Modules[name]["actions"][v] = {}
@@ -310,7 +312,7 @@ function PVox:ImplementModule(name, imp_func)
 		end
 
 		-- literally reusing code lmfao
-		for k, v in pairs(fdirs) do
+		for _, v in pairs(fdirs) do
 			note("found footstep pack " .. v)
 
 			PVox.Modules[name]["footsteps"][v] = {}
@@ -320,6 +322,20 @@ function PVox:ImplementModule(name, imp_func)
 			for _, v2 in pairs(afiles) do
 				-- found a footstep sound, we add it to the list
 				PVox.Modules[name]["footsteps"][v][#PVox.Modules[name]["footsteps"][v] + 1] = module_folder .. "/footsteps/" .. v .. "/" .. v2
+			end
+		end
+
+		-- for callouts
+		for _, v in pairs(cdirs) do
+			note("found callout pack " .. v)
+
+			PVox.Modules[name]["callouts"][v] = {}
+
+			local afiles, _ = file.Find("sound/" .. module_folder .. "/callouts/" .. v .. "/*." .. ext, "GAME")
+
+			for _, v2 in pairs(afiles) do
+				-- found a footstep sound, we add it to the list
+				PVox.Modules[name]["callouts"][v][#PVox.Modules[name]["callouts"][v] + 1] = module_folder .. "/callouts/" .. v .. "/" .. v2
 			end
 		end
 	end
