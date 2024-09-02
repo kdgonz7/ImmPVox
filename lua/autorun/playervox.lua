@@ -1,6 +1,7 @@
 PVOX_VersionStr = "pvox-v9-git-71da691"
 
--- PlayerVox (PVOX)
+-- # PlayerVox (PVOX)
+--
 -- Give players a voice!
 --
 --
@@ -562,6 +563,10 @@ function PVox:ImplementModule(name, imp_func)
 	local addTo = hook.Run("PVOX_ModuleBaseClass", name) or {}
 
 	table.Merge(PVox.Modules[name], addTo)
+end
+
+function PVox:Version()
+	return PVOX_VersionStr
 end
 
 function PVox:GetModule(name)
