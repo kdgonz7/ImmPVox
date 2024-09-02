@@ -3,8 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Page not found - PVox</title>
-        <base href="/">
+        <title>PVox Generator Functions - PVox</title>
 
 
         <!-- Custom HTML head -->
@@ -91,7 +90,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="foreword.html">Foreword</a></li><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="using_pvox.html"><strong aria-hidden="true">1.1.</strong> Getting Dirty With PVox</a></li><li class="chapter-item expanded "><a href="shared_modules.html"><strong aria-hidden="true">1.2.</strong> The Shared Module System</a></li><li class="chapter-item expanded "><a href="naming_convention.html"><strong aria-hidden="true">1.3.</strong> PVox Naming Conventions</a></li></ol></li><li class="chapter-item expanded "><a href="inter.html"><strong aria-hidden="true">2.</strong> PVox Interface</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="generators.html"><strong aria-hidden="true">2.1.</strong> PVox Generator Functions</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">2.2.</strong> PVox Actions</a></li><li class="chapter-item expanded "><a href="callouts.html"><strong aria-hidden="true">2.3.</strong> PVox Call-outs</a></li></ol></li><li class="chapter-item expanded "><a href="patches.html"><strong aria-hidden="true">3.</strong> PVox Server Patches</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="relchance.html"><strong aria-hidden="true">3.1.</strong> PVox's Reload Chance Patch</a></li><li class="chapter-item expanded "><a href="globalrng.html"><strong aria-hidden="true">3.2.</strong> PVox's Global RNG Patch</a></li><li class="chapter-item expanded "><a href="ea.html"><strong aria-hidden="true">3.3.</strong> PVox's EA Patch (Extended Actions)</a></li><li class="chapter-item expanded "><a href="footsteplib.html"><strong aria-hidden="true">3.4.</strong> PVox's Footsteps Patch</a></li></ol></li><li class="chapter-item expanded "><a href="footsteplib.html"><strong aria-hidden="true">4.</strong> PVox's Footstep API</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="foreword.html">Foreword</a></li><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="using_pvox.html"><strong aria-hidden="true">1.1.</strong> Getting Dirty With PVox</a></li><li class="chapter-item expanded "><a href="shared_modules.html"><strong aria-hidden="true">1.2.</strong> The Shared Module System</a></li><li class="chapter-item expanded "><a href="naming_convention.html"><strong aria-hidden="true">1.3.</strong> PVox Naming Conventions</a></li></ol></li><li class="chapter-item expanded "><a href="inter.html"><strong aria-hidden="true">2.</strong> PVox Interface</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="generators.html" class="active"><strong aria-hidden="true">2.1.</strong> PVox Generator Functions</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">2.2.</strong> PVox Actions</a></li><li class="chapter-item expanded "><a href="callouts.html"><strong aria-hidden="true">2.3.</strong> PVox Call-outs</a></li></ol></li><li class="chapter-item expanded "><a href="patches.html"><strong aria-hidden="true">3.</strong> PVox Server Patches</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="relchance.html"><strong aria-hidden="true">3.1.</strong> PVox's Reload Chance Patch</a></li><li class="chapter-item expanded "><a href="globalrng.html"><strong aria-hidden="true">3.2.</strong> PVox's Global RNG Patch</a></li><li class="chapter-item expanded "><a href="ea.html"><strong aria-hidden="true">3.3.</strong> PVox's EA Patch (Extended Actions)</a></li><li class="chapter-item expanded "><a href="footsteplib.html"><strong aria-hidden="true">3.4.</strong> PVox's Footsteps Patch</a></li></ol></li><li class="chapter-item expanded "><a href="footsteplib.html"><strong aria-hidden="true">4.</strong> PVox's Footstep API</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -178,14 +177,48 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="document-not-found-404"><a class="header" href="#document-not-found-404">Document not found (404)</a></h1>
-<p>This URL is invalid, sorry. Please use the navigation bar or search to continue.</p>
+                        <h1 id="pvox-generators"><a class="header" href="#pvox-generators">PVox Generators</a></h1>
+<p>PVox has generator functions built-in to ease in the process of creating voice lines and other player expressions.</p>
+<p>To access these generator functions, simply call the global <code>PVox</code> object.</p>
+<h2 id="generatesimilarnames"><a class="header" href="#generatesimilarnames"><code>GenerateSimilarNames</code></a></h2>
+<p>PVox's <code>GenerateSimilarNames</code> function does what you think it does. Generates similar names of files.</p>
+<p>The signature is as follows: (from <code>definitions.lua</code>)</p>
+<pre><code class="language-lua no_run">
+--- Generates a table with similar file names. E.g. if you have multiple audio files that are in the format a1.wav, a2.wav, a3.wav, you can
+--- use this function to, instead of writing them all out, create a table that automatically generates the names.
+---@param amount number      how many names you want to generates
+---@param common_name string the common name between all of the files
+---@param ext string         the common extension between all the files
+---@param zeroes boolean     should zeroes be appended to the filenames &lt; 10? (e.g. a01.wav instead of a1.wav)
+---@param prefix string      an (optional) appended prefix for the numbers. e.g. a_01.wav, '_' is the prefix. To disable it, use "" as the prefix for a name like a01.wav
+function PVox:GenerateSimilarNames(amount, common_name, ext, zeroes, prefix) end
+
+</code></pre>
+<h3 id="usage"><a class="header" href="#usage">Usage</a></h3>
+<p>To use the function, simply add it into the sound table you would like to define.</p>
+<p>From <code>css_ct.lua</code>:</p>
+<pre><code class="language-lua no_run">-- ...
+    ["enemy_killed"] = PVox:GenerateSimilarNames(3, "playervox/modules/css/enemy_down", "wav", false, ""),
+-- ...
+</code></pre>
+<p>This function works because the playervox/modules/css/ directory, looks like this:</p>
+<pre><code>playervox/modules/css/enemy_down1.wav
+playervox/modules/css/enemy_down2.wav
+playervox/modules/css/enemy_down3.wav
+</code></pre>
+<p>Therefore, the table automatically (and lazily) assumes that these files exist, and create the table with the proper file paths. The extension can also be changed for files that are not <code>.WAV</code>.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="inter.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
 
+                            <a rel="next prefetch" href="actions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -193,7 +226,13 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="inter.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
 
+                    <a rel="next prefetch" href="actions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>

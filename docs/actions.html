@@ -3,8 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Page not found - PVox</title>
-        <base href="/">
+        <title>PVox Actions - PVox</title>
 
 
         <!-- Custom HTML head -->
@@ -91,7 +90,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="foreword.html">Foreword</a></li><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="using_pvox.html"><strong aria-hidden="true">1.1.</strong> Getting Dirty With PVox</a></li><li class="chapter-item expanded "><a href="shared_modules.html"><strong aria-hidden="true">1.2.</strong> The Shared Module System</a></li><li class="chapter-item expanded "><a href="naming_convention.html"><strong aria-hidden="true">1.3.</strong> PVox Naming Conventions</a></li></ol></li><li class="chapter-item expanded "><a href="inter.html"><strong aria-hidden="true">2.</strong> PVox Interface</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="generators.html"><strong aria-hidden="true">2.1.</strong> PVox Generator Functions</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">2.2.</strong> PVox Actions</a></li><li class="chapter-item expanded "><a href="callouts.html"><strong aria-hidden="true">2.3.</strong> PVox Call-outs</a></li></ol></li><li class="chapter-item expanded "><a href="patches.html"><strong aria-hidden="true">3.</strong> PVox Server Patches</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="relchance.html"><strong aria-hidden="true">3.1.</strong> PVox's Reload Chance Patch</a></li><li class="chapter-item expanded "><a href="globalrng.html"><strong aria-hidden="true">3.2.</strong> PVox's Global RNG Patch</a></li><li class="chapter-item expanded "><a href="ea.html"><strong aria-hidden="true">3.3.</strong> PVox's EA Patch (Extended Actions)</a></li><li class="chapter-item expanded "><a href="footsteplib.html"><strong aria-hidden="true">3.4.</strong> PVox's Footsteps Patch</a></li></ol></li><li class="chapter-item expanded "><a href="footsteplib.html"><strong aria-hidden="true">4.</strong> PVox's Footstep API</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="foreword.html">Foreword</a></li><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="using_pvox.html"><strong aria-hidden="true">1.1.</strong> Getting Dirty With PVox</a></li><li class="chapter-item expanded "><a href="shared_modules.html"><strong aria-hidden="true">1.2.</strong> The Shared Module System</a></li><li class="chapter-item expanded "><a href="naming_convention.html"><strong aria-hidden="true">1.3.</strong> PVox Naming Conventions</a></li></ol></li><li class="chapter-item expanded "><a href="inter.html"><strong aria-hidden="true">2.</strong> PVox Interface</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="generators.html"><strong aria-hidden="true">2.1.</strong> PVox Generator Functions</a></li><li class="chapter-item expanded "><a href="actions.html" class="active"><strong aria-hidden="true">2.2.</strong> PVox Actions</a></li><li class="chapter-item expanded "><a href="callouts.html"><strong aria-hidden="true">2.3.</strong> PVox Call-outs</a></li></ol></li><li class="chapter-item expanded "><a href="patches.html"><strong aria-hidden="true">3.</strong> PVox Server Patches</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="relchance.html"><strong aria-hidden="true">3.1.</strong> PVox's Reload Chance Patch</a></li><li class="chapter-item expanded "><a href="globalrng.html"><strong aria-hidden="true">3.2.</strong> PVox's Global RNG Patch</a></li><li class="chapter-item expanded "><a href="ea.html"><strong aria-hidden="true">3.3.</strong> PVox's EA Patch (Extended Actions)</a></li><li class="chapter-item expanded "><a href="footsteplib.html"><strong aria-hidden="true">3.4.</strong> PVox's Footsteps Patch</a></li></ol></li><li class="chapter-item expanded "><a href="footsteplib.html"><strong aria-hidden="true">4.</strong> PVox's Footstep API</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -178,14 +177,101 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="document-not-found-404"><a class="header" href="#document-not-found-404">Document not found (404)</a></h1>
-<p>This URL is invalid, sorry. Please use the navigation bar or search to continue.</p>
+                        <h1 id="pvox-actions"><a class="header" href="#pvox-actions">PVox Actions</a></h1>
+<p>Actions are PVox's way of managing sound tables. PVox uses a simple global table in order to manage separate player's modules, and other forms of player sounds.</p>
+<p>Globally, the PVox module table looks something like this.</p>
+<pre><code class="language-lua no_run">
+['My Cool Module 1'] = {
+    ['actions'] = {...},
+    ['callouts'] = {...},
+    ['footsteps'] = { [ 'default' ] = { ... } }
+},
+
+['My Cool Module 2'] = {
+    ['actions'] = {...},
+    ['callouts'] = {...},
+    ['footsteps'] = { [ 'default' ] = { ... } }
+},
+
+</code></pre>
+<p>The only required field for modules is the <code>actions</code> table. This contains the key value pairs of tables in which sounds can be ran from. Actions are usually string values with no spaces, in all lowercase (with underscores, therefore snake case), and they simply define all of the possible sound files associated with that specific action.</p>
+<p>For example, the action <code>pickup_weapon</code> is called whenever a player picks up a weapon. This means that to add sounds that can be used with this, you'd put them in a table.</p>
+<pre><code class="language-lua no_run">function pvox_setup_actions()
+    return {
+        ['actions'] = {
+            ['pickup_weapon'] = {
+                'my_sound_dir/pickup1_cool.wav',
+                'my_sound_dir/pickup2_cool.wav',
+                'my_sound_dir/pickup3_cool.wav',
+                'my_sound_dir/pickup4_cool.wav',
+            }
+        }
+    }
+end
+</code></pre>
+<h2 id="types"><a class="header" href="#types">Types</a></h2>
+<p>In PVox implementations, there has always been a consistent standard, linking.</p>
+<p>When creating an implementation, instead of linking an action <code>string</code> key to a <code>table</code> value, you can link it to another <code>string</code> to instead use <em>THAT</em> action.</p>
+<pre><code class="language-lua no_run">['actions'] = {
+    ['pickup_weapon'] = "on_ready",
+    ['on_ready'] = {
+        'a.wav',
+        'b.wav',
+        'c.wav',
+    }
+}
+</code></pre>
+<p>And once run in PVox, those sound files will be called whenever a weapon is picked up, OR whenever <code>on_ready</code> is called.</p>
+<div class="warning">
+As of 9/2/2024, the pickup_weapon action may not be working as expected with the (VManip) Manual Pickup addon installed. See <a href=https://github.com/kdgonz7/ImmPVox/issues/16>PVox Weapon Pickup Sound Bug (Issue No. 16)</a> for more information.
+</div>
+<h2 id="available-actions"><a class="header" href="#available-actions">Available Actions</a></h2>
+<p>While the actual defined amount of actions is unknown, as any action can be ran via <code>EmitAction</code>, and it is up to the defined action-table to create sounds for that string, there are some actions which are frequently emitted from the default PVox codebase.</p>
+<p>Those include:</p>
+<ul>
+<li><code>"death"</code> - called whenever a player dies.</li>
+<li><code>"take_damage_in_vehicle"</code> - called when a player takes damage in a vehicle.</li>
+<li><code>"take_damage"</code> - called when a player takes general damage</li>
+<li><code>"damage_" + npc_class</code> - called when a player takes damage from <code>npc_class</code>. See <a href="./local.html">Localized Information</a> for more info.</li>
+<li><code>npc_class + "_killed"</code> - called when an NPC of <code>npc_class</code> is killed. See <a href="./local.html">Localized Information</a> for more info.</li>
+<li><code>"nice_shot"</code> - <strong>(New in V9)</strong> called when a friendly NPC gets a kill, and the player sees it.
+<ul>
+<li>(may require the <strong>EA</strong> patch to be enabled. See <a href="./ea.html">Extended Actions</a> for more information.)</li>
+</ul>
+</li>
+<li><code>"enemy_killed"</code> - when a general enemy/thing is killed.</li>
+<li><code>"enemy_spotted"</code> - called when an enemy is spotted, or has been tagged.
+<ul>
+<li>They are therefore known by the current player, and other players around them.</li>
+</ul>
+</li>
+<li><code>"confirm_kill"</code> - when a kill is confirmed. These are separate voice lines and can be created via the <code>pvox_smart_confirm</code>.</li>
+<li><code>"reload"</code> - when a player reloads their current weapon.</li>
+<li><code>"no_ammo"</code> - called when a player tries to reload their current weapon, but they have no ammo.</li>
+<li><code>"pickup_weapon"</code> - called when a player picks up a <strong>weapon</strong></li>
+<li><code>"on_ready"</code> - called when a player spawns in. However, as of v9, <code>pickup_weapon</code> has precedence over this action.
+<ul>
+<li>Use <code>pickup_weapon</code> instead, or copy/link <code>pickup_weapon</code> here.</li>
+</ul>
+</li>
+</ul>
+<h3 id="eba-extension-based-actions"><a class="header" href="#eba-extension-based-actions">EBA (Extension-Based Actions)</a></h3>
+<p>Here are some extension-based actions, or actions which are called from modules, and aren't officially called by PVox itself.</p>
+<ul>
+<li><code>inspect</code> - called when the inspect key is pressed. See [The Inspect Module] for more information.</li>
+</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="generators.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
 
+                            <a rel="next prefetch" href="callouts.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -193,7 +279,13 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="generators.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
 
+                    <a rel="next prefetch" href="callouts.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>
