@@ -550,6 +550,8 @@ function PVox:ImplementModule(name, imp_func)
 			if type(sound) == "table" then
 				sound = sound[math.random(1, #sound)]
 			end
+			
+			if ! sound then return end
 
 			local dur = SoundDuration(sound)
 
