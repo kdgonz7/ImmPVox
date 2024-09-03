@@ -97,29 +97,6 @@ local PVoxGlobalRNGPatch          = CreateConVar("pvox_global_rng", "1", {FCVAR_
 
 local PVoxExtendedActions         = CreateConVar("pvox_patch_extended_action", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
-concommand.Add("pvox_ServerModules", function(ply, cmd, args)
-	if ! PVoxAllowNotes:GetBool() then
-		print("hi! if you're seeing this then it means you have pvox_allownotes set to 0. which means the server modules won't print")
-		return
-	end
-
-	note("listing server VOX modules")
-
-	for k, v in pairs(PVox.Modules) do
-		v.description = v.description or ""
-		v.print_name = v.print_name or ""
-		note(k)
-		note("\tName: " .. (v.print_name or ""))
-		note("\tDescription: " .. (v.description or ""))
-	end
-
-	note("listing server LUA modules")
-
-	for k, v in pairs(PVox.LoadedLUAFiles) do
-		note("	loaded LUA module '" .. k .. "'") -- todo: add descriptions (k)
-	end
-end)
-
 function warn(msg)
 	if PVoxSuppressWarnings:GetBool() then return end
 	MsgC(Color(255, 119, 0), "[PVox]", Color(255, 255, 255), " " .. msg .. "\n")
@@ -140,6 +117,7 @@ function PVox:GetTotalSoundCount(modu)
 	local mod = PVox.Modules[modu]
 
 	if ! mod then return 0 end
+	if ! mod.actions then return 0 end
 
 	local final = 0
 
@@ -427,6 +405,8 @@ function PVox:ImplementModule(name, imp_func)
 					self:StopEmit(ply)
 				end
 			end
+
+			if ! PVox.Modules[name].actions then return end
 
 			local action_soundtable = PVox.Modules[name]["actions"][action]
 
@@ -1059,6 +1039,59 @@ concommand.Add("pvox_CalloutPanel", function(ply, cmd, args)
 	end
 end)
 
+concommand.Add("pvox_ModuleActions", function(ply, cmd, args)
+	local module = args[1]
+
+	if ! module then return end
+	if ! PVox.Modules[module].actions then return end
+	if ! PVox.Modules[module] then return end
+
+	for aname, atable in pairs(PVox.Modules[module].actions) do
+		note("module " .. module .. " implements action " .. aname)
+	end
+end)
+
+-- we use a simple kill confirm bind instead of automatic detection.
+-- this just feels better when playing
+concommand.Add("pvox_smart_confirm", function(ply, args, cmd)
+	local et = ply:GetEyeTrace()
+	local ent = et.Entity
+
+	if ! IsValid(ent) then return end
+	if (ent:GetClass() ~= "prop_ragdoll") then return end
+
+	local pr = ply:GetNWString("vox_preset", "none")
+	if pr == "none" then return end
+
+	local mod = PVox.Modules[pr]
+	ply:SetNWBool("RanFromSmart", true)
+	mod:EmitAction(ply, "confirm_kill")
+	ply:SetNWBool("RanFromSmart", false)
+end)
+
+concommand.Add("pvox_ServerModules", function(ply, cmd, args)
+	if ! PVoxAllowNotes:GetBool() then
+		print("hi! if you're seeing this then it means you have pvox_allownotes set to 0. which means the server modules won't print")
+		return
+	end
+
+	note("listing server VOX modules")
+
+	for k, v in pairs(PVox.Modules) do
+		v.description = v.description or ""
+		v.print_name = v.print_name or ""
+		note(k)
+		note("\tName: " .. (v.print_name or ""))
+		note("\tDescription: " .. (v.description or ""))
+	end
+
+	note("listing server LUA modules")
+
+	for k, v in pairs(PVox.LoadedLUAFiles) do
+		note("	loaded LUA module '" .. k .. "'") -- todo: add descriptions (k)
+	end
+end)
+
 if SERVER then
 	MsgC(Color(255, 0, 230), "[PVOX SERVER]", Color(255, 255, 255), " PlayerVox loaded v0.0.1\n")
 end
@@ -1202,24 +1235,6 @@ hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 	end
 
 	
-end)
-
--- we use a simple kill confirm bind instead of automatic detection.
--- this just feels better when playing
-concommand.Add("pvox_smart_confirm", function(ply, args, cmd)
-	local et = ply:GetEyeTrace()
-	local ent = et.Entity
-
-	if ! IsValid(ent) then return end
-	if (ent:GetClass() ~= "prop_ragdoll") then return end
-
-	local pr = ply:GetNWString("vox_preset", "none")
-	if pr == "none" then return end
-
-	local mod = PVox.Modules[pr]
-	ply:SetNWBool("RanFromSmart", true)
-	mod:EmitAction(ply, "confirm_kill")
-	ply:SetNWBool("RanFromSmart", false)
 end)
 
 -- most hitgroups supported.
