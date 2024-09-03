@@ -15,5 +15,3 @@
     - [PVox's Global RNG Patch](./globalrng.md)
     - [PVox's EA Patch (Extended Actions)](./ea.md)
     - [PVox's Footsteps Patch](./footsteplib.md)
-
-- [PVox's Footstep API](./footsteplib.md)
