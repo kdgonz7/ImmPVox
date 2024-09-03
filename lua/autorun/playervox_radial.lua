@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-field
 if SERVER then return end
 
 local PVoxCalloutMenuOpen = false
