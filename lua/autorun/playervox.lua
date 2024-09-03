@@ -538,6 +538,8 @@ function PVox:ImplementModule(name, imp_func)
 				end
 			end
 
+			if ! PVox.Modules[name]["callouts"] then return end
+
 			local sound = PVox.Modules[name]["callouts"][callout]
 
 			if ! sound then
