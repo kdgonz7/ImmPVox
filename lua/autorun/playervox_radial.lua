@@ -71,7 +71,7 @@ hook.Add("PlayerBindPress", "fads", function(ply, bind, pressed)
         Selected = Selected + 1
 
         if Selected > #Options then
-            Selected = #Options
+            Selected = #Options - 1
         end
 
         return true
