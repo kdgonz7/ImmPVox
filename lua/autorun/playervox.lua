@@ -1142,6 +1142,14 @@ hook.Add("PlayerSpawn", "StartPlayerPresetByModel", function(ply)
 end)
 
 hook.Add("PlayerCanPickupWeapon", "PlayerVoxPickupSound", function(ply, wep)
+	if _1 then return end
+
+	_1 = true
+	local res = hook.Run("PlayerCanPickupWeapon", ply, wep)
+
+	if res == false then _1 = false; return false end
+	_1 = false
+
 	local preset = ply:GetNWString("vox_preset", "none")
 
 	if preset ~= "none" then
@@ -1151,6 +1159,34 @@ hook.Add("PlayerCanPickupWeapon", "PlayerVoxPickupSound", function(ply, wep)
 			mod:EmitAction(ply, "pickup_weapon")
 		end
 	end
+
+	return true
+end)
+
+hook.Add("PlayerCanPickupItem", "PlayerVoxPickupSound", function(ply, wep)
+	if _1 then return end
+
+	_1 = true
+	local res = hook.Run("PlayerCanPickupItem", ply, wep)
+
+	if res == false then _1 = false; return false end
+	_1 = false
+
+	local preset = ply:GetNWString("vox_preset", "none")
+
+	if preset ~= "none" then
+		local mod = PVox:GetModule(preset)
+
+		if mod then
+			if mod:HasAction(ply, "pickup_item") then
+				mod:EmitAction(ply, "pickup_item")
+			else
+				mod:EmitAction(ply, "pickup_weapon")
+			end
+		end
+	end
+
+	return true
 end)
 
 -- hook.Add("WeaponEquip", "W", function(wep, own)
