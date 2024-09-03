@@ -1355,7 +1355,7 @@ hook.Add("EntityTakeDamage", "SmartDamageAlerts", function (ent, dm)
 	elseif ent:Health() <= 0 then
 		if ent:GetNWBool("Spotted", false) == true or ! PVoxSendDamageOnce:GetBool() then
 			if ! mod:HasAction(pot_ply, spcc .. "_killed") then
-				mod:EmitAction(pot_ply, "enemy" .. "_killed")
+				mod:EmitAction(pot_ply, "enemy" .. "_killed", true)
 				return
 			end
 
