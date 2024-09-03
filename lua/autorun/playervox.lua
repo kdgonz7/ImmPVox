@@ -789,6 +789,7 @@ PVox:ImplementModule("combinesoldier", function(ply)
 			["Stay Alert"] = {
 				"npc/combine_soldier/vo/overwatchreportspossiblehostiles.wav",
 				"npc/combine_soldier/vo/stayalertreportsightlines.wav",
+				"npc/combine_soldier/vo/stayalert.wav",
 			},
 
 			["Target Lost"] = {
