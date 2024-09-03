@@ -17,7 +17,7 @@ hook.Add("HUDPaint", "painta", function()
     if PVoxCalloutMenuOpen then
         local ScreenW = ScrW()
         local ScreenH = ScrH()
-        local Base = { x = ScreenW * 0.1,  y = ScreenH * 0.6 }
+        local Base = { x = ScreenW * 0.05,  y = ScreenH * 0.3 }
 
         -- the menu is in the bottom left
 
