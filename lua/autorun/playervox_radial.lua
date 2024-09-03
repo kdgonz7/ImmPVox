@@ -29,7 +29,7 @@ hook.Add("HUDPaint", "painta", function()
 
         if ! m then return end
         if ! m.callouts then return end
-        if #m.callouts <= 0 then return end
+        if table.IsEmpty(m.callouts) then return end
 
         local pos = Base.y
         local i = 1
