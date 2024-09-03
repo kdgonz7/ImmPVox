@@ -3,6 +3,7 @@ if SERVER then return end
 local PVoxCalloutMenuOpen = false
 local Options = {}
 local Selected = 1
+local Us = LocalPlayer()
 
 local KeysToNumbers = {
     [KEY_1] = 1,
@@ -14,7 +15,7 @@ local KeysToNumbers = {
 }
 
 hook.Add("HUDPaint", "painta", function()
-    if PVoxCalloutMenuOpen then
+    if PVoxCalloutMenuOpen and Us:Alive() then
         local ScreenW = ScrW()
         local ScreenH = ScrH()
         local Base = { x = ScreenW * 0.05,  y = ScreenH * 0.3 }
@@ -25,7 +26,7 @@ hook.Add("HUDPaint", "painta", function()
         surface.SetTextPos(Base.x, Base.y)
         surface.SetTextColor(Color(255, 255, 255))
 
-        local m = PVox:GetPlayerModule(LocalPlayer())
+        local m = PVox:GetPlayerModule(Us)
 
         if ! m then return end
         if ! m.callouts then return end
@@ -76,7 +77,7 @@ hook.Add("PlayerBindPress", "fads", function(ply, bind, pressed)
         Selected = Selected - 1
 
         if Selected < 1 then
-            Selected = 1
+            Selected = #Options - 1
         end
         return true
     end
