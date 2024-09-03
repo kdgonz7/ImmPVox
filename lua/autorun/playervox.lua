@@ -1383,7 +1383,7 @@ hook.Add("OnNPCKilled", "PlayerVoxOnNPCKilled", function(npc, attacker, inflicto
 end)
 
 --- @param npc NPC
---- @param attacker Player
+--- @param attacker NPC
 --- @param inflictor Entity
 hook.Add("OnNPCKilled", "PlayerVoxNicePatch", function (npc, attacker, inflictor)
 	if ! IsValid(npc) then return end
@@ -1400,6 +1400,11 @@ hook.Add("OnNPCKilled", "PlayerVoxNicePatch", function (npc, attacker, inflictor
 		
 		if attacker:Disposition(ent) != D_HT && ent:Visible(npc) then
 			-- if we don't hate them, then tell them nice shot
+---@diagnostic disable-next-line: param-type-mismatch
+			local pmod = PVox:GetPlayerModule(ent)
+			if ! pmod then return end
+			
+---@diagnostic disable-next-line: param-type-mismatch
 			pmod:EmitAction(ent, "nice_shot")
 		end
 	end
