@@ -24,21 +24,25 @@ hook.Add("HUDPaint", "painta", function()
         surface.SetFont("HudDefault")
         surface.SetTextPos(Base.x, Base.y)
         surface.SetTextColor(Color(255, 255, 255))
-        
+
         local m = PVox:GetPlayerModule(LocalPlayer())
 
         if ! m then return end
         if ! m.callouts then return end
 
         local pos = Base.y
-
         local i = 1
         -- k = callout name, v = callout table
         for k, v in pairs(m.callouts) do
             local Text = tostring(i) .. ". " .. k
             local _, TextSizey =  surface.GetTextSize(Text)
+
             if i == Selected then
-                surface.SetTextColor(Color(255, 214, 10))
+                Text = "-> " .. Text
+
+                if i != 7 then
+                    surface.SetTextColor(Color(255, 214, 10))
+                end
             else
                 surface.SetTextColor(color_white)
             end
@@ -52,19 +56,22 @@ hook.Add("HUDPaint", "painta", function()
 
             i = i + 1
         end
+
+        Options[i] = "Cancel"
     end
 end)
 
---- comments
 hook.Add("PlayerBindPress", "fads", function(ply, bind, pressed)
     if ! PVoxCalloutMenuOpen then return end
     if ! pressed then return end
 
     if bind == "invnext" then
         Selected = Selected + 1
+
         if Selected > #Options then
             Selected = #Options
         end
+
         return true
     elseif bind == "invprev" then
         Selected = Selected - 1
@@ -82,10 +89,12 @@ end)
 
 concommand.Add("-pvox_open_callout", function()
     PVoxCalloutMenuOpen = false
-    
-    if Options[Selected] == nil then return end
+    if Options[Selected] == nil then Selected = 1; return end
+
 
     net.Start("PVOX_Callout")
     net.WriteString(Options[Selected])
     net.SendToServer()
+
+    Selected = 1
 end)
