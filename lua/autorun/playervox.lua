@@ -381,6 +381,14 @@ function PVox:ImplementModule(name, imp_func)
 			return ply:GetNWString("PVOX_CachedSound", "")
 		end,
 
+		SetLastSound = function(self, ply, sound)
+			ply:SetNWString("PVOX_LastSound", sound)
+		end,
+
+		GetLastSound = function(self, ply)
+			return ply:GetNWString("PVOX_LastSound", "")
+		end,
+
 		HasAction = function(self, action)
 			if ! PVox.Modules[name] or ! PVox.Modules[name]["actions"] then return false end
 			return PVox.Modules[name]["actions"][action] ~= nil
@@ -436,11 +444,20 @@ function PVox:ImplementModule(name, imp_func)
 			local rand_sound = action_soundtable[math.random(1, #action_soundtable)]
 			local dur = SoundDuration(rand_sound)
 
+			-- FIXME: disable if performance tanks hard
+			-- FIXME: should tank at worse O(n), n being the length of action sound_table but that's worse worse
+			if rand_sound == self:GetLastSound(ply) and #action_soundtable > 1 then
+				while rand_sound == self:GetLastSound(ply) do
+					rand_sound = action_soundtable[math.random(1, #action_soundtable)]
+				end
+			end
+
 			if dur == 60 then
 				dur = 0.5
 			end
 
 			self:SetCachedSound(ply, rand_sound)
+			self:SetLastSound(ply, rand_sound)
 			self:PlaySoundSafe(ply, rand_sound, dur + new_time)
 
 			if (PVox.Modules[name].CCEnabled) then
