@@ -183,6 +183,12 @@ PVOX_ModuleBaseClass.StopEmit = function(self, ply) end
 --- @return nil
 PVOX_ModuleBaseClass.StartEmit = function(self, ply) end
 
+--- Emits a footstep on `surface_mat` implemented by the player's current module 
+--- @param self PVOX_ModuleBaseClass
+--- @param ply Player
+--- @param surface_mat string
+PVOX_ModuleBaseClass.EmitFootstep = function(self, ply, surface_mat) end
+
 --- Sets `ply.CachedSound`.
 --- @param self table
 --- @param ply Player
