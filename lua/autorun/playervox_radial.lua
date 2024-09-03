@@ -41,9 +41,7 @@ hook.Add("HUDPaint", "painta", function()
             if i == Selected then
                 Text = "-> " .. Text
 
-                if i != 7 then
-                    surface.SetTextColor(Color(255, 214, 10))
-                end
+                surface.SetTextColor(Color(255, 214, 10))
             else
                 surface.SetTextColor(color_white)
             end
