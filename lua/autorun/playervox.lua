@@ -727,8 +727,10 @@ PVox:ImplementModule("combinesoldier", function(ply)
 				"voice"
 			},
 			["reload"] = {
-				"playervox/modules/combinesoldier/player_reload_01.wav",
-				"playervox/modules/combinesoldier/player_reload_02.wav",
+				"npc/combine_soldier/vo/cover.wav",
+				"npc/combine_soldier/vo/coverme.wav",
+				"npc/combine_soldier/vo/coverhurt.wav",
+				"npc/combine_soldier/vo/sharpzone.wav",
 			},
 
 			["enemy_spotted"] = {
@@ -776,15 +778,53 @@ PVox:ImplementModule("combinesoldier", function(ply)
 
 		-- 
 		["callouts"] = {
-			["Report"] = {
-				"npc/combine_soldier/vo/overwatchreportspossiblehostiles.wav",
+			["Sector Not Secure"] = {
 				"npc/combine_soldier/vo/sectorisnotsecure.wav",
+			},
+
+			["Sector Secure"] = {
+				"npc/combine_soldier/vo/secure.wav",
+			},
+
+			["Stay Alert"] = {
+				"npc/combine_soldier/vo/overwatchreportspossiblehostiles.wav",
+				"npc/combine_soldier/vo/stayalertreportsightlines.wav",
 			},
 
 			["Target Lost"] = {
 				"npc/combine_soldier/vo/phantom.wav",
+				"npc/combine_soldier/vo/shadow.wav",
 				"npc/combine_soldier/vo/prepforcontact.wav",
-				"npc/combine_soldier/vo/movein.wav",
+			},
+
+			["Target Found"] = {
+				"npc/combine_soldier/vo/target.wav",
+				"npc/combine_soldier/vo/targetblackout.wav",
+				"npc/combine_soldier/vo/targetmyradial.wav",
+				"npc/combine_soldier/vo/targetone.wav",
+			},
+
+			["Target Hit"] = {
+				"npc/combine_soldier/vo/targetcompromisedmovein.wav",
+				"npc/combine_soldier/vo/unitisinbound.wav",
+			},
+
+			["Agree"] = {
+				"npc/combine_soldier/vo/affirmative.wav",
+				"npc/combine_soldier/vo/affirmative2.wav",
+				"npc/combine_soldier/vo/copy.wav",
+				"npc/combine_soldier/vo/copythat.wav",
+			},
+
+			["Disagree"] = {
+				"npc/combine_soldier/vo/zero.wav",
+				"npc/combine_soldier/vo/zero.wav",
+			},
+
+			["Clear"] = {
+				"npc/combine_soldier/vo/reportingclear.wav",
+				"npc/combine_soldier/vo/sectorissecurenovison.wav",
+				"npc/combine_soldier/vo/secure.wav",
 			}
 		},
 
