@@ -4,7 +4,6 @@ if SERVER then return end
 local PVoxCalloutMenuOpen = false
 local Options = {}
 local Selected = 1
-local Us = LocalPlayer()
 
 local KeysToNumbers = {
     [KEY_1] = 1,
@@ -16,6 +15,8 @@ local KeysToNumbers = {
 }
 
 hook.Add("HUDPaint", "painta", function()
+    local Us = LocalPlayer()
+
     if PVoxCalloutMenuOpen and Us:Alive() then
         local ScreenW = ScrW()
         local ScreenH = ScrH()
