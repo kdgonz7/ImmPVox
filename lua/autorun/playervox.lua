@@ -501,7 +501,7 @@ function PVox:ImplementModule(name, imp_func)
 		EmitFootstep = function(self, ply, surface_mat)
 			if ! IsValid(ply) then return end
 			if CLIENT then return end
-			
+
 			-- since this is supposed to be ran from playerfootstep hook
 			-- we don't need as many bounds checks
 
@@ -774,10 +774,6 @@ PVox:ImplementModule("combinesoldier", function(ply)
 				"playervox/modules/combinesoldier/player_no_ammo_02.wav",
 			},
 
-			["frag_out"] = {
-				"playervox/modules/combinesoldier/player_frag_out_01.wav",
-			},
-
 			["confirm_kill"] = {
 				"playervox/modules/combinesoldier/player_confirm_kill_01.wav",
 				"playervox/modules/combinesoldier/player_confirm_kill_02.wav",
@@ -787,13 +783,24 @@ PVox:ImplementModule("combinesoldier", function(ply)
 				"playervox/modules/combinesoldier/player_death_01.wav",
 				"playervox/modules/combinesoldier/player_death_02.wav",
 				"playervox/modules/combinesoldier/player_death_03.wav",
+			},
+
+			["frag_out"] = {
+				"npc/combine_soldier/vo/dagger.wav",
 			}
 		},
 
 		-- 
-		["radial_Callouts"] = {
-			["Taunt"] = {
-				""
+		["callouts"] = {
+			["Report"] = {
+				"npc/combine_soldier/vo/overwatchreportspossiblehostiles.wav",
+				"npc/combine_soldier/vo/sectorisnotsecure.wav",
+			},
+
+			["Target Lost"] = {
+				"npc/combine_soldier/vo/phantom.wav",
+				"npc/combine_soldier/vo/prepforcontact.wav",
+				"npc/combine_soldier/vo/movein.wav",
 			}
 		},
 
@@ -1379,7 +1386,6 @@ hook.Add("PlayerFootstep", "PlayerVoxOnFootstep", function (ply, pos, foot, soun
 
 	if plyMod then
 		local surf = PLC_GetSurfaceMaterial(ply)
-
 		if ! plyMod:EmitFootstep(ply, surf) then return false else return true end
 	end
 end)
