@@ -66,12 +66,12 @@ end)
 hook.Add("PlayerBindPress", "fads", function(ply, bind, pressed)
     if ! PVoxCalloutMenuOpen then return end
     if ! pressed then return end
-
+    
     if bind == "invnext" then
         Selected = Selected + 1
 
-        if Selected > #Options then
-            Selected = #Options - 1
+        if Selected > #Options - 1 then
+            Selected = 1
         end
 
         return true
@@ -81,6 +81,7 @@ hook.Add("PlayerBindPress", "fads", function(ply, bind, pressed)
         if Selected < 1 then
             Selected = #Options - 1
         end
+
         return true
     end
 end)
