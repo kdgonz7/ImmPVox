@@ -1440,10 +1440,13 @@ end
 hook.Add("PlayerFootstep", "PlayerVoxOnFootstep", function (ply, pos, foot, sound, volume, filter)
 	if PVoxEnableFootstepsPatch:GetBool() == false then return false end
 
+	--- @class PVOX_ModuleBaseClass
 	local plyMod = PVox:GetPlayerModule(ply)
 
 	if plyMod then
 		local surf = PLC_GetSurfaceMaterial(ply)
+		if surf == nil then return end
+
 		if ! plyMod:EmitFootstep(ply, surf) then return false else return true end
 	end
 end)
@@ -1458,10 +1461,12 @@ hook.Add("EntityTakeDamage", "PlayerVoxOnDamage", function (ent, dm)
 	if ! IsValid(ent) or ! ent:IsPlayer() then return end
 
 
+---@diagnostic disable-next-line: param-type-mismatch
 	local m = PVox:GetPlayerModule(ent)
 	if ! m then return end
 
 	-- general damage action here
+---@diagnostic disable-next-line: param-type-mismatch
 	m:EmitAction(ent, "take_damage")
 end)
 
