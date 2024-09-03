@@ -62,9 +62,7 @@ hook.Add("PlayerBindPress", "fads", function(ply, bind, pressed)
 
     if bind == "invnext" then
         Selected = Selected + 1
-        print(Selected)
         if Selected > #Options then
-            print("map")
             Selected = #Options
         end
         return true
@@ -72,7 +70,6 @@ hook.Add("PlayerBindPress", "fads", function(ply, bind, pressed)
         Selected = Selected - 1
 
         if Selected < 1 then
-            print("map")
             Selected = 1
         end
         return true
@@ -85,6 +82,8 @@ end)
 
 concommand.Add("-pvox_open_callout", function()
     PVoxCalloutMenuOpen = false
+    
+    if Options[Selected] == nil then return end
 
     net.Start("PVOX_Callout")
     net.WriteString(Options[Selected])
