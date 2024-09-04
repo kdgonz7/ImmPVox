@@ -1317,6 +1317,8 @@ hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 	elseif key == IN_ATTACK then
 		local weap = ply:GetActiveWeapon()
 
+		if ! IsValid(weap) then return end
+
 		if weap:GetPrimaryAmmoType() == 10 then
 			local mod = PVox:GetPlayerModule(ply)
 			if mod then
