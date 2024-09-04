@@ -100,4 +100,6 @@ concommand.Add("-pvox_open_callout", function()
     net.SendToServer()
 
     Selected = 1
+
+    Options = {}
 end)
