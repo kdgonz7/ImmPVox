@@ -2,17 +2,13 @@
 if SERVER then return end
 
 local PVoxCalloutMenuOpen = false
+local PVoxCalloutMenuOptions = {
+    BoxColor = Color(36, 36, 36),
+    BoxRadius = 12
+}
+
 local Options = {}
 local Selected = 1
-
-local KeysToNumbers = {
-    [KEY_1] = 1,
-    [KEY_2] = 2,
-    [KEY_3] = 3,
-    [KEY_4] = 4,
-    [KEY_5] = 5,
-    [KEY_6] = 6,
-}
 
 hook.Add("HUDPaint", "painta", function()
     local Us = LocalPlayer()
@@ -22,11 +18,12 @@ hook.Add("HUDPaint", "painta", function()
         local ScreenH = ScrH()
         local Base = { x = ScreenW * 0.05,  y = ScreenH * 0.3 }
 
+
         -- the menu is in the bottom left
 
-        surface.SetFont("HudDefault")
         surface.SetTextPos(Base.x, Base.y)
         surface.SetTextColor(Color(255, 255, 255))
+        surface.SetFont("PVox-Normal-HUD-Font")
 
         local m = PVox:GetPlayerModule(Us)
 
@@ -37,7 +34,25 @@ hook.Add("HUDPaint", "painta", function()
         local pos = Base.y
 
         local i = 1
+
+        local NewSize = {
+            x = ScreenW * 0.20,
+            y = ScreenH * 0.06,
+        }
+    
+        for k, v in pairs(m.callouts) do
+            local Text = tostring(i) .. ". " .. k
+            local TextX, TextY = surface.GetTextSize(Text)
+
+            NewSize.y = NewSize.y + TextY
+
+            i = i + 1
+        end
+
+        draw.RoundedBox(PVoxCalloutMenuOptions.BoxRadius, ScreenW * 0.03, ScreenH * 0.27, NewSize.x, NewSize.y, PVoxCalloutMenuOptions.BoxColor)
         
+        i = 1
+
         -- k = callout name, v = callout table
         for k, v in pairs(m.callouts) do
             local Text = tostring(i) .. ". " .. k
@@ -49,8 +64,6 @@ hook.Add("HUDPaint", "painta", function()
             else
                 surface.SetTextColor(color_white)
             end
-
-            surface.SetFont("PVox-Normal-HUD-Font")
 
             local _, TextSizey =  surface.GetTextSize(Text)
 
@@ -64,6 +77,7 @@ hook.Add("HUDPaint", "painta", function()
         end
 
         Options[i] = "Cancel"
+
     end
 end)
 
