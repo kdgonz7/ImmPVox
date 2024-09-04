@@ -50,7 +50,7 @@ hook.Add("HUDPaint", "painta", function()
             end
 
             pos = pos + TextSizey
-
+            surface.SetFont("PVox-Normal-HUD-Font")
             surface.DrawText(Text)
             surface.SetTextPos(Base.x, pos)
 
