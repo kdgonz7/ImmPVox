@@ -35,11 +35,12 @@ hook.Add("HUDPaint", "painta", function()
         if table.IsEmpty(m.callouts) then return end
 
         local pos = Base.y
+
         local i = 1
+        
         -- k = callout name, v = callout table
         for k, v in pairs(m.callouts) do
             local Text = tostring(i) .. ". " .. k
-            local _, TextSizey =  surface.GetTextSize(Text)
 
             if i == Selected then
                 Text = "-> " .. Text
@@ -49,8 +50,11 @@ hook.Add("HUDPaint", "painta", function()
                 surface.SetTextColor(color_white)
             end
 
-            pos = pos + TextSizey
             surface.SetFont("PVox-Normal-HUD-Font")
+
+            local _, TextSizey =  surface.GetTextSize(Text)
+
+            pos = pos + TextSizey
             surface.DrawText(Text)
             surface.SetTextPos(Base.x, pos)
 
