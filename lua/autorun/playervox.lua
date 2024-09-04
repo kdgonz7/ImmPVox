@@ -1214,7 +1214,7 @@ hook.Add("PlayerCanPickupItem", "PlayerVoxPickupSound", function(ply, wep)
 	_1 = true
 	local res = hook.Run("PlayerCanPickupItem", ply, wep)
 
-	if res == false then _1 = false; return false end
+	if res == false then _1 = false; return end
 	_1 = false
 
 	local preset = ply:GetNWString("vox_preset", "none")
@@ -1268,6 +1268,23 @@ end)
 -- 	end
 -- end)
 
+
+-- some NPC support
+local NPCS = {
+	["npc_combine_s"]         = "soldier",
+	["npc_metropolice"]       = "soldier",
+	["npc_manhack"]           = "manhack",
+	["npc_stalker"]           = "stalker",
+	["npc_antlion"]           = "antlion",
+	["npc_antlionguard"]      = "antlion",
+	["npc_barnacle"]          = "barnacle",
+	["npc_fastzombie"]        = "zombie",
+	["npc_fastzombietorso"]   = "zombie",
+	["npc_poisonzombie"]      = "zombie",
+	["npc_zombie"]            = "zombie",
+	["npc_zombine"]           = "zombine",
+}
+
 --- @param ply Player
 hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 	if ! PVoxEnabled:GetBool() then return end
@@ -1279,7 +1296,8 @@ hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 
 		if ! IsValid(wep) then
 			warn("tried to call built-in module reload with no active weapon. non-fatal.")
-			return end
+			return
+		end
 
 		if wep:Clip1() >= wep:GetMaxClip1() then return end
 
@@ -1325,6 +1343,35 @@ hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 				mod:EmitAction(ply, "frag_out", false)
 			end
 		end
+	elseif key == IN_ATTACK2 then
+		timer.Simple(0.2, function()
+			local rad = ents.FindInCone(ply:EyePos(), ply:GetAimVector(), 5000, math.cos(math.rad( 15 )))
+
+			---@param v NPC
+			for k, v in pairs(rad) do
+				if v:IsNPC() or v:IsNextBot() then
+					local npc_dispotition = v:Disposition(ply)
+					if npc_dispotition == D_HT then
+						local mod = PVox:GetPlayerModule(ply)
+						if ! mod then return end
+
+						if v:Health() > 0 and v:GetNWBool("Spotted", false) == false then
+							v:SetNWBool("Spotted", true)
+
+							local npc_class = NPCS[v:GetClass()]
+
+							if ! mod:HasAction(ply, npc_class .. "_spotted") then
+								mod:EmitAction(ply, "enemy" .. "_spotted")
+								return
+							end
+					
+							mod:EmitAction(ply, npc_class .. "_spotted")
+						end
+					end
+				end
+			end
+		end)
+
 	end
 end)
 
@@ -1342,22 +1389,6 @@ local HGT = {
 	[HITGROUP_RIGHTLEG] = "rightleg",
 	[HITGROUP_GENERIC] = "generic",
 	[HITGROUP_GEAR] = "gear",
-}
-
--- some NPC support
-local NPCS = {
-	["npc_combine_s"]         = "soldier",
-	["npc_metropolice"]       = "soldier",
-	["npc_manhack"]           = "manhack",
-	["npc_stalker"]           = "stalker",
-	["npc_antlion"]           = "antlion",
-	["npc_antlionguard"]      = "antlion",
-	["npc_barnacle"]          = "barnacle",
-	["npc_fastzombie"]        = "zombie",
-	["npc_fastzombietorso"]   = "zombie",
-	["npc_poisonzombie"]      = "zombie",
-	["npc_zombie"]            = "zombie",
-	["npc_zombine"]           = "zombine",
 }
 
 hook.Add("OnEntityCreated", "SmartManage", function(ent)
