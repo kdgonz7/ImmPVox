@@ -1268,6 +1268,7 @@ end)
 -- 	end
 -- end)
 
+--- @param ply Player
 hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 	if ! PVoxEnabled:GetBool() then return end
 
@@ -1313,9 +1314,16 @@ hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 				end
 			end
 		end
-	end
+	elseif key == IN_ATTACK then
+		local weap = ply:GetActiveWeapon()
 
-	
+		if weap:GetPrimaryAmmoType() == 10 then
+			local mod = PVox:GetPlayerModule(ply)
+			if mod then
+				mod:EmitAction(ply, "frag_out", false)
+			end
+		end
+	end
 end)
 
 -- most hitgroups supported.
