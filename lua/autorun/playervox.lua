@@ -1109,9 +1109,8 @@ concommand.Add("pvox_smart_confirm", function(ply, args, cmd)
 	if pr == "none" then return end
 
 	local mod = PVox.Modules[pr]
-	ply:SetNWBool("RanFromSmart", true)
+
 	mod:EmitAction(ply, "confirm_kill")
-	ply:SetNWBool("RanFromSmart", false)
 end)
 
 concommand.Add("pvox_ServerModules", function(ply, cmd, args)
