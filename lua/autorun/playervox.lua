@@ -1531,7 +1531,7 @@ hook.Add("PlayerFootstep", "PlayerVoxOnFootstep", function (ply, pos, foot, soun
 		local surf = PLC_GetSurfaceMaterial(ply)
 		if surf == nil then return end
 
-		if ! plyMod:EmitFootstep(ply, surf) then return false else return true end
+		if ! plyMod:EmitFootstep(ply, surf) then return false else return end
 	end
 end)
 
