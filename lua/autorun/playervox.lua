@@ -1521,6 +1521,7 @@ hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 							v:SetNWBool("Spotted", true)
 
 							local npc_class = NPCS[v:GetClass()]
+							if ! npc_class then npc_class = "enemy" end
 
 							if ! mod:HasAction(ply, npc_class .. "_spotted") then
 								mod:EmitAction(ply, "enemy" .. "_spotted")
