@@ -60,6 +60,7 @@ PVOX_VersionStr = "pvox-v9-git-71da691"
 if SERVER then
 	util.AddNetworkString("PVox_ChangePlayerPreset")
 	util.AddNetworkString("PVox_OpenCalloutPanel")
+	util.AddNetworkString("PVox_PlayAction")
 	util.AddNetworkString("PVox_Callout") -- Callout(ply, calloutname)
 end
 
@@ -697,6 +698,19 @@ if SERVER then
 
 		if ! player_Module then return end
 		player_Module:PlayCallout(ply, callout, true)
+	end)
+
+	net.Receive("PVox_PlayAction", function (len, ply)
+		local action_name   = net.ReadString()
+		local override      = net.ReadBool()
+		local appended_wait = net.ReadInt(32)
+
+		local action_name_stripped = string.Trim(action_name)
+
+		local pmod = PVox:GetPlayerModule(ply)
+		if ! pmod then return end
+
+		pmod:EmitAction(ply, action_name, override, appended_wait)
 	end)
 end
 
