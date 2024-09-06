@@ -1,4 +1,4 @@
-PVOX_VersionStr = "pvox-v9-git-71da691"
+PVOX_VersionStr = "pvox-v10-git-71da691"
 
 -- # PlayerVox (PVOX)
 --
