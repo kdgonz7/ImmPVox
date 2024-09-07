@@ -18,7 +18,6 @@ hook.Add("HUDPaint", "painta", function()
         local ScreenH = ScrH()
         local Base = { x = ScreenW * 0.05,  y = ScreenH * 0.3 }
 
-
         -- the menu is in the bottom left
 
         surface.SetTextPos(Base.x, Base.y)
@@ -39,8 +38,12 @@ hook.Add("HUDPaint", "painta", function()
             x = ScreenW * 0.20,
             y = ScreenH * 0.06,
         }
-    
-        for k, v in pairs(m.callouts) do
+
+        local callouts_keys = table.GetKeys(m.callouts)
+
+        table.sort(callouts_keys)
+
+        for _, k in pairs(callouts_keys) do
             local Text = tostring(i) .. ". " .. k
             local TextX, TextY = surface.GetTextSize(Text)
 
@@ -54,7 +57,7 @@ hook.Add("HUDPaint", "painta", function()
         i = 1
 
         -- k = callout name, v = callout table
-        for k, v in pairs(m.callouts) do
+        for _, k in pairs(callouts_keys) do
             local Text = tostring(i) .. ". " .. k
 
             if i == Selected then
