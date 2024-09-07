@@ -1514,7 +1514,7 @@ hook.Add("KeyPress", "PlayerVoxDefaults", function(ply, key)
 
 			---@param v NPC
 			for k, v in pairs(rad) do
-				if v:IsNPC() or v:IsNextBot() then
+				if v:IsNPC() or v:IsNextBot() and v.Disposition then
 					local npc_dispotition = v:Disposition(ply)
 					if npc_dispotition == D_HT then
 						local mod = PVox:GetPlayerModule(ply)
