@@ -49,6 +49,11 @@ hook.Add("HUDPaint", "painta", function()
 
             NewSize.y = NewSize.y + TextY
 
+            /* we set the new size of the box to the text's width. It's greater than ours */
+            if TextX > NewSize.x then
+                NewSize.x = TextX * 1.3
+            end
+
             i = i + 1
         end
 
