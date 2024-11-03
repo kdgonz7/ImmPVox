@@ -5,9 +5,10 @@ if SERVER then
 end
 
 local files = file.Find("pvox_module/*.lua", "LUA")
+local color_green = Color(0, 255, 0)
 
 local log = function(v)
-	MsgC(Color(0, 255, 0), "[PVox CLIENT]", Color(255, 255, 255), " " .. v .. "\n")
+	MsgC(color_green, "[PVox CLIENT]", Color(255, 255, 255), " " .. v .. "\n")
 end
 
 for _, v in pairs(files) do
