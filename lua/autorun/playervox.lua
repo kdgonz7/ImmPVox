@@ -50,10 +50,25 @@
 -- It contains the pairs of actions, binded to their sound tables.
 -- depending on how many sounds you add, you can randomize the chances of certain sounds.
 --
+-- Changelog
+-- ----------------
 -- New in version v0.0.4 - there will potentially be a API upgrade, allowing
 -- developers to easily create sound packs by specifying an AutoCreate(),
 -- where it will essentially create the module code for you,
 -- and all you have to do is store the sounds in a certain order.
+--
+-- ------------------
+--
+-- New in version v10.0 - sound packs now have descriptions and are finally
+-- using their "print_name."
+--
+-- LOTSSSSS of bugs have been absolutely demolished, and there's a radial menu now.
+-- Props to me and another.... not so human, guy.
+--
+-- -> added descriptions for every stock PVox
+-- -> added a NEW SUPER MODERN BLAINGLY FAST UI for checking server modules
+-- -> fixed the conflicts between viewpop viewbunch, and dsteps!
+--
 PVOX_VersionStr = "pvox-v10-git-3651ceb"
 
 if SERVER then
