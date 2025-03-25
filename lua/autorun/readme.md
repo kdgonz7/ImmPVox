@@ -1,1 +1,0 @@
-note i will take down the radial HUD if it causes too many issues with tfa-vox. it is primarily a prototype hud until a new one is created.
