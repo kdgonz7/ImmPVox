@@ -1544,7 +1544,7 @@ end
 
 -- adds player footsteps
 hook.Add("PlayerFootstep", "PlayerVoxOnFootstep", function (ply, pos, foot, sound, volume, filter)
-	if PVoxEnableFootstepsPatch:GetBool() == false then return false end
+	if PVoxEnableFootstepsPatch:GetBool() == false then return end
 
 	--- @class PVOX_ModuleBaseClass
 	local plyMod = PVox:GetPlayerModule(ply)
@@ -1553,7 +1553,11 @@ hook.Add("PlayerFootstep", "PlayerVoxOnFootstep", function (ply, pos, foot, soun
 		local surf = PLC_GetSurfaceMaterial(ply)
 		if surf == nil then return end
 
-		if ! plyMod:EmitFootstep(ply, surf) then return false else return end
+		local success = plyMod:EmitFootstep(ply, surf)
+		if success then
+			-- Only suppress default sound
+			return true
+		end
 	end
 end)
 
