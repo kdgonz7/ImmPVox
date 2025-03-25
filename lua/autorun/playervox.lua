@@ -1152,7 +1152,7 @@ concommand.Add("pvox_ServerModules", function(ply, cmd, args)
 end)
 
 if SERVER then
-	MsgC(Color(255, 0, 230), "[PVOX SERVER]", Color(255, 255, 255), " PlayerVox loaded v0.0.1\n")
+	PrintMessage(HUD_PRINTCENTER, "PVox Loaded :) (" .. PVOX_VersionStr .. ")")
 end
 
 if CLIENT then return end
