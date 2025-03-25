@@ -1608,7 +1608,6 @@ hook.Add("ScalePlayerDamage", "PlayerVoxPlayerShouldTakeDamage", function(ply, h
 	end
 end)
 
-hook.Add("ShutDown", "PlayerVoxSavePreset", PVOX_SavePreset)
 
 hook.Add("PlayerDeath", "PlayerVoxPlayerDeath", function(ply, inflictor, attacker)
 	if ! IsValid(ply) then return end
@@ -1619,3 +1618,5 @@ hook.Add("PlayerDeath", "PlayerVoxPlayerDeath", function(ply, inflictor, attacke
 
 	plyMod:EmitAction(ply, "death", true)
 end)
+
+hook.Add("ShutDown", "PlayerVoxSavePreset", PVOX_SavePreset)
