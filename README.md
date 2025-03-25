@@ -5,7 +5,6 @@
     <br>
     <br>
     <img src="https://img.shields.io/badge/status-stable-green">
-    <img src="https://github.com/kdgonz7/ImmPVox/actions/workflows/blank.yml/badge.svg">
 </div>
 
 <hr>
