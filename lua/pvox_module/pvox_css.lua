@@ -5,6 +5,7 @@ if ! PVox then return end
 PVox:ImplementModule("css-ct", function(ply)
 	return {
 		["print_name"] = "Counter Strike: Source Counter-Terrorists Operator",
+		["description"] = "CS:S Counter terrorist voicelines.",
 		["actions"] = {
 			["on_ready"] = {
 				"playervox/modules/css/letsgo.wav",

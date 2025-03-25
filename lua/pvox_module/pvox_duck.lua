@@ -8,7 +8,7 @@ AddCSLuaFile()
 PVox:ImplementModule("duck", function(ply)
 	return {
 		["print_name"] = "Duck",
-		["description"] = "A duck. With 1 unique, high quality voice line.",
+		["description"] = "A duck. With 1 unique, high quality voice line. Made for testing, however, nice if you want a linear and easy to use duck voicelines.",
 		["callouts"] = {
 			["quack"] = {
 				"playervox/modules/duck/quack_5.mp3",
