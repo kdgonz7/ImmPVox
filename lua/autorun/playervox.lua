@@ -1,5 +1,3 @@
-PVOX_VersionStr = "pvox-v10-git-3651ceb"
-
 -- # PlayerVox (PVOX)
 --
 -- Give players a voice!
@@ -56,6 +54,7 @@ PVOX_VersionStr = "pvox-v10-git-3651ceb"
 -- developers to easily create sound packs by specifying an AutoCreate(),
 -- where it will essentially create the module code for you,
 -- and all you have to do is store the sounds in a certain order.
+PVOX_VersionStr = "pvox-v10-git-3651ceb"
 
 if SERVER then
 	util.AddNetworkString("PVox_ChangePlayerPreset")
@@ -90,12 +89,9 @@ local PVoxUseCC                  = CreateConVar("pvox_useclosedcaptioning", "1",
 
 local PVoxEnableReloadChancePatch = CreateConVar("pvox_patch_reload", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxReloadChance            = CreateConVar("pvox_patch_reload_chance", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-
 local PVoxEnableFootstepsPatch    = CreateConVar("pvox_patch_footsteps", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxGlobalFootstepVolume    = CreateConVar("pvox_patch_footsteps_gl_footstepvolume", "75", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-
 local PVoxGlobalRNGPatch          = CreateConVar("pvox_global_rng", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-
 local PVoxExtendedActions         = CreateConVar("pvox_patch_extended_action", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
 -- [ pvox stdio ]
@@ -111,153 +107,6 @@ function note(msg)
 	MsgC(Color(0, 229, 255), "[PVox]", Color(255, 255, 255), " " .. msg .. "\n")
 end
 
-// ## Tasks
-//
-// A task contains a potential callback, priority  (can also be replaced with tickets), and a name.
-//
---- @class PVTask
-local PVoxTask = {
-	potential_callback = nil,
-	priority = 0,
-	task_name = "",
-}
-
-function PVoxTask:New()
-	return self
-end
-
-// ## Task Queue
-// A First-In-First-Out Task Queue designed for PVox.
-//
-// A task queue contains actions to-be-ran, instead of having multiple actions ran
-// simultaneously or on a per-delta basis. To run a task, use `AddToRun(action_name, priority)`.
-//
-// ```lua
-// local queue = PVoxFIFOQueue:New()
-// 
-// queue:SetCallback(function(task_name)
-// 		print("running task " .. task_name)
-// end)
-//
-// queue:AddToRun("my_sample_action", 1)
-// queue:AddToRun("my_sample_action2", 2)
-// -- tasks are now scheduled, not ran yet.
-//
-// queue:RunNextTaskWithoutRemoval() -- my_sample_action
-// queue:RunNextTaskWithoutRemoval() -- my_sample_action2 
-//
-// -- RunNextTaskWithoutRemoval does not remove the task from the queue.
-// -- you can still access the queue's information.
-// --
-// -- The queue also contains a priority system, which allowes entries to be ran before others, however, still being
-// -- ran afterward.
-// ```
-//
---- @class FIFOQueue
-local PVoxFIFOQueue = {
-	callback = function(task)
-		print("pvox_fifo_queue::callback(task) " .. tostring(task))
-	end,
-
-	queue = {},
-	head = 0,
-	tail = 0,
-}
-
---- Returns a new FIFO queue.
---- @return FIFOQueue
-function PVoxFIFOQueue:New()
-	return self
-end
-
---- overrides self.callback with new `func` value.
---- 
---- @param func function
-function PVoxFIFOQueue:SetCallback(func)
-	self.callback = func
-end
-
---- adds `task_name` as the task to run.
----@param task_name string
----@param priority number
-function PVoxFIFOQueue:AddToRun(task_name, priority)
-	print("add task " .. task_name)
-
-	-- note: there's a weird bug with Lua 5.1 where I can't share the PVoxTask struct
-	-- via value. So this is what you get for now. Ugly, I know.
-	table.insert(self.queue, {
-		task_name = task_name,
-		priority = priority,
-	})
-
-	PrintTable(self.queue)
-
-	if self.head == 0 and #self.queue > 0 then
-		self.head = 1
-	end // start at the head
-
-	if #self.queue > 0 then
-		self.tail = #self.queue
-	end
-end
-
---- Returns the task at `self.tail`.
---- @return PVTask | nil
-function PVoxFIFOQueue:TailUnchecked()
-	return self.queue[self.tail]
-end
-
---- Returns the task at `self.head`.
---- @return PVTask | nil
-function PVoxFIFOQueue:HeadUnchecked()
-	return self.queue[self.head]
-end
-
---- Moves `self.head` by one. Essentially, by the queue's knowledge, 
---- shadows the existing head in exchange for another.
-function PVoxFIFOQueue:MoveHeadUnchecked()
-	self.head = self.head + 1
-end
-
-function PVoxFIFOQueue:DeincTailUnchecked()
-	self.tail = self.tail - 1
-end
-
-function PVoxFIFOQueue:RunNextTask()
-	--[[ we're not anywhere important ]]
-	if self.head == 0 || self.tail == 0 then return print("head", self.head, "tail", self.tail) end
-	if self.head > self.tail then
-		return print("overflow") /* todo: overflow */
-	end
-
-	table.sort(self.queue, function (a, b)
-		return a.priority < b.priority
-	end)
-
-	local n_head = self:HeadUnchecked()
-
-	if n_head != nil then
-		self.callback(table.remove(self.queue, self.head))
-		self:DeincTailUnchecked()
-	end
-end
-
-local queue = PVoxFIFOQueue:New()
-
---- @param task PVTask
-queue:SetCallback(function(task)
-	print("running " .. task.task_name)
-end)
-
-queue:AddToRun("task_1", 3)
-queue:AddToRun("task_2", 2)
-queue:AddToRun("task_3", 1)
-
-queue:RunNextTask()
-queue:RunNextTask()
-queue:RunNextTask()
-
--- [ pvox baseclass ]
 
 function PVox:New()
 	return self
