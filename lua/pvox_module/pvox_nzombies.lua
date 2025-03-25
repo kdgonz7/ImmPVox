@@ -1,10 +1,5 @@
---! from developers: this is unfinished. This will however still be committed but the conversion is not finished. So far
---! only untested perks have been completed.
+--! This is a converted module from TFA-VOX to PVox for nZombies integration
 
-
-
-
---useless module information
 local MODULE = {}
 
 MODULE.name = "nZombies - Perks, Box, Facilities etc."
@@ -12,287 +7,190 @@ MODULE.description = "Plays sounds based on nZombies events"
 MODULE.authors = {["Zet0r"] = "TFA-VOX Module for NZombies", ["kdgonz7"] = "Converting it to PVox"}
 MODULE.realm = "shared"
 
--- in PVox, these are just replaced by actions. e.g. HMODULE:EmitAction( 'nzombies.perk' )
--- hook.Add("TFAVOX_InitializePlayer","TFAVOX_nZombiesIP",function(ply)
--- 	if IsValid(ply) then
--- 		local mdtbl = TFAVOX_Models[ply:GetModel()]
--- 		if mdtbl then
-
--- 			ply.TFAVOX_Sounds = ply.TFAVOX_Sounds or {}
-
--- 			if mdtbl.nzombies then
--- 				ply.TFAVOX_Sounds['nzombies'] = ply.TFAVOX_Sounds['nzombies'] or {}
--- 				ply.TFAVOX_Sounds['nzombies'].perk = mdtbl.nzombies.perk
--- 				ply.TFAVOX_Sounds['nzombies'].power = mdtbl.nzombies.power
--- 				ply.TFAVOX_Sounds['nzombies'].round = mdtbl.nzombies.round
--- 				ply.TFAVOX_Sounds['nzombies'].revive = mdtbl.nzombies.revive
--- 				ply.TFAVOX_Sounds['nzombies'].boss = mdtbl.nzombies.boss -- Not implemented yet
--- 				ply.TFAVOX_Sounds['nzombies'].powerup = mdtbl.nzombies.powerup
--- 				ply.TFAVOX_Sounds['nzombies'].facility = mdtbl.nzombies.facility
--- 			end
-
--- 		end
--- 	end
-
--- end)
-
-local function TFAVOX_IsValid(ply)
-	return PVox:GetPlayerModule(ply) != nil
+-- Helper function to check if player has valid PVox module
+local function IsPlayerValid(ply)
+	return IsValid(ply) and PVox:GetPlayerModule(ply) != nil
 end
 
-hook.Add( "OnPlayerGetPerk", "TFAVOX_nZombies_Perks", function( ply, id, machine )
+-- Helper function to get random valid player with PVox
+local function GetRandomValidPlayer(exclude)
+	local plys = player.GetAllPlayingAndAlive()
+	local valid = {}
+	
+	for _, ply in pairs(plys) do
+		if IsPlayerValid(ply) and ply:GetNotDowned() and ply != exclude then
+			table.insert(valid, ply)
+		end
+	end
+	
+	return table.Random(valid)
+end
+
+-- Perks
+hook.Add("OnPlayerGetPerk", "PVox_nZombies_Perks", function(ply, id, machine)
 	timer.Simple(1, function()
-		if IsValid(ply) and TFAVOX_IsValid(ply) and ply:HasPerk(id) then
+		if IsPlayerValid(ply) and ply:HasPerk(id) then
 			local plm = PVox:GetPlayerModule(ply)
-			if plm == nil then return end
-			if math.random(0,3) == 0  or ! plm:HasAction(ply, "nzombies.perk." .. tostring(id)) then id = "generic" end
+			-- Use generic perk voice line occasionally or if specific one isn't available
+			if math.random(0, 3) == 0 or !plm:HasAction("nzombies.perk." .. tostring(id)) then
+				id = "generic"
+			end
 			
-			timer.Simple(0,function()
+			timer.Simple(0, function()
 				if IsValid(ply) and ply:HasPerk(id) then
-					plm:EmitAction(ply, "nzombies.perk." .. tostring(id))
+					plm:EmitAction("nzombies.perk." .. tostring(id))
 				end
 			end)
 		end
 	end)
 end)
 
-hook.Add( "OnRoundPreparation", "TFAVOX_nZombies_Round", function( round )
+-- Round preparation
+hook.Add("OnRoundPreparation", "PVox_nZombies_Round", function(round)
 	if round and round > 1 then
 		timer.Simple(3, function()
 			if nzRound:InProgress() then
-				local plys = player.GetAllPlayingAndAlive()
-				local valid = {}
-				for k,v in pairs(plys) do
-					if TFAVOX_IsValid(v) and v.TFAVOX_Sounds and v.TFAVOX_Sounds.nzombies and v:GetNotDowned() then
-						table.insert(valid, v)
-					end
-				end
+				local ply = GetRandomValidPlayer()
 				
-				local ply = table.Random(valid)
 				if IsValid(ply) then
-					local sndtbl = ply.TFAVOX_Sounds['nzombies'].round
-					if sndtbl and sndtbl["prepare"] then
-						TFAVOX_PlayVoicePriority( ply, sndtbl["prepare"], 0 )
-						
-						-- Play reply 3 seconds later
-						timer.Simple(3, function()
-							if nzRound:InProgress() then
-								local plys = player.GetAllPlayingAndAlive()
-								local valid = {}
-								for k,v in pairs(plys) do
-									if TFAVOX_IsValid(v) and v.TFAVOX_Sounds and v.TFAVOX_Sounds.nzombies and v:GetNotDowned() and v != ply then
-										table.insert(valid, v)
-									end
-								end
-								
-								local ply2 = table.Random(valid)
-								if IsValid(ply2) then
-									local sndtbl = ply2.TFAVOX_Sounds['nzombies'].round
-									if sndtbl and sndtbl["preparereply"] then
-										TFAVOX_PlayVoicePriority( ply2, sndtbl["preparereply"], 0 )
-									end
-								end
+					local plm = PVox:GetPlayerModule(ply)
+					plm:EmitAction("nzombies.round.prepare")
+					
+					-- Play reply 3 seconds later
+					timer.Simple(3, function()
+						if nzRound:InProgress() then
+							local ply2 = GetRandomValidPlayer(ply)
+							
+							if IsValid(ply2) then
+								local plm2 = PVox:GetPlayerModule(ply2)
+								plm2:EmitAction("nzombies.round.preparereply")
 							end
-						end)
-					end
+						end
+					end)
 				end
 			end
 		end)
 	end
 end)
 
-hook.Add("OnRoundStart", "TFAVOX_nZombies_Round", function( num )
+-- Round start
+hook.Add("OnRoundStart", "PVox_nZombies_Round", function(num)
 	if nzRound:IsSpecial() then
-		local plys = player.GetAllPlayingAndAlive()
-		local valid = {}
-		for k,v in pairs(plys) do
-			if TFAVOX_IsValid(v) and v.TFAVOX_Sounds and v.TFAVOX_Sounds.nzombies and v:GetNotDowned() then
-				table.insert(valid, v)
-			end
-		end
+		local ply = GetRandomValidPlayer()
 		
-		local ply = table.Random(valid)
 		if IsValid(ply) then
-			local sndtbl = ply.TFAVOX_Sounds['nzombies'].round
-			if sndtbl and sndtbl["special"] then
-				TFAVOX_PlayVoicePriority( ply, sndtbl["special"], 0 )
-			end
+			local plm = PVox:GetPlayerModule(ply)
+			plm:EmitAction("nzombies.round.special")
 		end
 	end
 end)
 
-hook.Add( "OnPlayerPickupPowerUp", "TFAVOX_nZombies_Powerups", function( ply, id, ent )
+-- Powerups
+hook.Add("OnPlayerPickupPowerUp", "PVox_nZombies_Powerups", function(ply, id, ent)
 	timer.Simple(2.5, function()
-		if nzRound:InProgress() then
-			if IsValid(ply) and TFAVOX_IsValid(ply) then
-				if ply.TFAVOX_Sounds and ply.TFAVOX_Sounds.nzombies then
-					local sndtbl = ply.TFAVOX_Sounds['nzombies'].powerup
-					if sndtbl then
-						if (not sndtbl[id]) or math.random(0,3) == 0 then id = "generic" end
-						
-						if sndtbl[id] then
-							TFAVOX_PlayVoicePriority( ply, sndtbl[id], 0 )
-						end
-					end
-				end
+		if nzRound:InProgress() and IsPlayerValid(ply) then
+			local plm = PVox:GetPlayerModule(ply)
+			
+			-- Use generic powerup voice line occasionally or if specific one isn't available
+			if math.random(0, 3) == 0 or !plm:HasAction("nzombies.powerup." .. id) then
+				id = "generic"
 			end
+			
+			plm:EmitAction("nzombies.powerup." .. id)
 		end
 	end)
 end)
 
-hook.Add( "PlayerDowned", "TFAVOX_nZombies_Revive", function( ply )
-	if IsValid(ply) and TFAVOX_IsValid(ply) then
-		if ply.TFAVOX_Sounds and ply.TFAVOX_Sounds.nzombies then
-			local sndtbl = ply.TFAVOX_Sounds['nzombies'].revive
-			if sndtbl and sndtbl['downed'] then
-				TFAVOX_PlayVoicePriority( ply, sndtbl['downed'], 0 )
-			end
-		end
+-- Player downed
+hook.Add("PlayerDowned", "PVox_nZombies_Revive", function(ply)
+	if IsPlayerValid(ply) then
+		local plm = PVox:GetPlayerModule(ply)
+		plm:EmitAction("nzombies.revive.downed")
 	end
 	
 	timer.Simple(3, function()
-		local plys = player.GetAllPlayingAndAlive()
-		local valid = {}
-		for k,v in pairs(plys) do
-			if TFAVOX_IsValid(v) and v.TFAVOX_Sounds and v.TFAVOX_Sounds.nzombies and v:GetNotDowned() then
-				table.insert(valid, v)
-			end
-		end
+		local ply2 = GetRandomValidPlayer(ply)
 		
-		local ply = table.Random(valid)
-		if IsValid(ply) then
-			local sndtbl = ply.TFAVOX_Sounds['nzombies'].revive
-			if sndtbl and sndtbl["otherdowned"] then
-				TFAVOX_PlayVoicePriority( ply, sndtbl["otherdowned"], 0 )
-			end
+		if IsValid(ply2) then
+			local plm = PVox:GetPlayerModule(ply2)
+			plm:EmitAction("nzombies.revive.otherdowned")
 		end
 	end)
 end)
 
-hook.Add( "PlayerKilled", "TFAVOX_nZombies_Revive", function( ply )
-	local plys = player.GetAllPlayingAndAlive()
-	local valid = {}
-	for k,v in pairs(plys) do
-		if TFAVOX_IsValid(v) and v.TFAVOX_Sounds and v.TFAVOX_Sounds.nzombies and v:GetNotDowned() then
-			table.insert(valid, v)
-		end
-	end
+-- Player killed
+hook.Add("PlayerKilled", "PVox_nZombies_Revive", function(ply)
+	local ply2 = GetRandomValidPlayer(ply)
 	
-	local ply = table.Random(valid)
-	if IsValid(ply) then
-		local sndtbl = ply.TFAVOX_Sounds['nzombies'].revive
-		if sndtbl and sndtbl["dead"] then
-			TFAVOX_PlayVoicePriority( ply, sndtbl["dead"], 0 )
-		end
+	if IsValid(ply2) then
+		local plm = PVox:GetPlayerModule(ply2)
+		plm:EmitAction("nzombies.revive.dead")
 	end
 end)
 
-hook.Add( "PlayerBeingRevived", "TFAVOX_nZombies_Revive", function( ply, revivor )
-	if IsValid(revivor) and TFAVOX_IsValid(revivor) then
-		if revivor.TFAVOX_Sounds and revivor.TFAVOX_Sounds.nzombies then
-			local sndtbl = revivor.TFAVOX_Sounds['nzombies'].revive
-			if sndtbl and sndtbl['reviving'] then
-				TFAVOX_PlayVoicePriority( revivor, sndtbl['reviving'], 0 )
-			end
-		end
+-- Player being revived
+hook.Add("PlayerBeingRevived", "PVox_nZombies_Revive", function(ply, revivor)
+	if IsPlayerValid(revivor) then
+		local plm = PVox:GetPlayerModule(revivor)
+		plm:EmitAction("nzombies.revive.reviving")
 	end
 end)
 
-hook.Add( "PlayerRevived", "TFAVOX_nZombies_Revive", function( ply )
-	if IsValid(ply) and TFAVOX_IsValid(ply) then
-		if ply.TFAVOX_Sounds and ply.TFAVOX_Sounds.nzombies then
-			local sndtbl = ply.TFAVOX_Sounds['nzombies'].revive
-			if sndtbl and sndtbl['revived'] then
-				TFAVOX_PlayVoicePriority( ply, sndtbl['revived'], 0 )
-			end
-		end
+-- Player revived
+hook.Add("PlayerRevived", "PVox_nZombies_Revive", function(ply)
+	if IsPlayerValid(ply) then
+		local plm = PVox:GetPlayerModule(ply)
+		plm:EmitAction("nzombies.revive.revived")
 	end
 end)
 
-hook.Add( "ElectricityOn", "TFAVOX_nZombies_Power", function()
+-- Electricity events
+hook.Add("ElectricityOn", "PVox_nZombies_Power", function()
 	timer.Simple(3, function()
 		if nzRound:InProgress() then
-			local plys = player.GetAllPlayingAndAlive()
-			local valid = {}
-			for k,v in pairs(plys) do
-				if TFAVOX_IsValid(v) and v.TFAVOX_Sounds and v.TFAVOX_Sounds.nzombies and v:GetNotDowned() then
-					table.insert(valid, v)
-				end
-			end
+			local ply = GetRandomValidPlayer()
 			
-			local ply = table.Random(valid)
 			if IsValid(ply) then
-				local sndtbl = ply.TFAVOX_Sounds['nzombies'].power
-				if sndtbl and sndtbl["on"] then
-					TFAVOX_PlayVoicePriority( ply, sndtbl["on"], 0 )
-				end
+				local plm = PVox:GetPlayerModule(ply)
+				plm:EmitAction("nzombies.power.on")
 			end
 		end
 	end)
 end)
 
-hook.Add( "ElectricityOff", "TFAVOX_nZombies_Power", function()
+hook.Add("ElectricityOff", "PVox_nZombies_Power", function()
 	timer.Simple(3, function()
 		if nzRound:InProgress() then
-			local plys = player.GetAllPlayingAndAlive()
-			local valid = {}
-			for k,v in pairs(plys) do
-				if TFAVOX_IsValid(v) and v.TFAVOX_Sounds and v.TFAVOX_Sounds.nzombies and v:GetNotDowned() then
-					table.insert(valid, v)
-				end
-			end
+			local ply = GetRandomValidPlayer()
 			
-			local ply = table.Random(valid)
 			if IsValid(ply) then
-				local sndtbl = ply.TFAVOX_Sounds['nzombies'].power
-				if sndtbl and sndtbl["off"] then
-					TFAVOX_PlayVoicePriority( ply, sndtbl["off"], 0 )
-				end
+				local plm = PVox:GetPlayerModule(ply)
+				plm:EmitAction("nzombies.power.off")
 			end
 		end
 	end)
 end)
 
-hook.Add( "OnPlayerBuyBox", "TFAVOX_nZombies_Box", function(ply, gun)
-	if IsValid(ply) and TFAVOX_IsValid(ply) then
-		if ply.TFAVOX_Sounds and ply.TFAVOX_Sounds.nzombies then
-			local sndtbl = ply.TFAVOX_Sounds['nzombies'].facility
-			if sndtbl and sndtbl['randombox'] then
-				TFAVOX_PlayVoicePriority( ply, sndtbl['randombox'], 0 )
-			end
-		end
+-- Facility interactions
+hook.Add("OnPlayerBuyBox", "PVox_nZombies_Box", function(ply, gun)
+	if IsPlayerValid(ply) then
+		local plm = PVox:GetPlayerModule(ply)
+		plm:EmitAction("nzombies.facility.randombox")
 	end
 end)
 
-hook.Add( "OnPlayerBuyBox", "TFAVOX_nZombies_Box", function(ply, gun)
-	if IsValid(ply) and TFAVOX_IsValid(ply) then
-		if ply.TFAVOX_Sounds and ply.TFAVOX_Sounds.nzombies then
-			local sndtbl = ply.TFAVOX_Sounds['nzombies'].facility
-			if sndtbl and sndtbl['randombox'] then
-				TFAVOX_PlayVoicePriority( ply, sndtbl['randombox'], 0 )
-			end
-		end
+hook.Add("OnPlayerBuyWunderfizz", "PVox_nZombies_Wunderfizz", function(ply, perk)
+	if IsPlayerValid(ply) then
+		local plm = PVox:GetPlayerModule(ply)
+		plm:EmitAction("nzombies.facility.wunderfizz")
 	end
 end)
 
-hook.Add( "OnPlayerBuyWunderfizz", "TFAVOX_nZombies_Wunderfizz", function(ply, perk)
-	if IsValid(ply) and TFAVOX_IsValid(ply) then
-		if ply.TFAVOX_Sounds and ply.TFAVOX_Sounds.nzombies then
-			local sndtbl = ply.TFAVOX_Sounds['nzombies'].facility
-			if sndtbl and sndtbl['wunderfizz'] then
-				TFAVOX_PlayVoicePriority( ply, sndtbl['wunderfizz'], 0 )
-			end
-		end
+hook.Add("OnPlayerBuyPackAPunch", "PVox_nZombies_Packapunch", function(ply, gun)
+	if IsPlayerValid(ply) then
+		local plm = PVox:GetPlayerModule(ply)
+		plm:EmitAction("nzombies.facility.packapunch")
 	end
 end)
 
-hook.Add( "OnPlayerBuyPackAPunch", "TFAVOX_nZombies_Packapunch", function(ply, gun)
-	if IsValid(ply) and TFAVOX_IsValid(ply) then
-		if ply.TFAVOX_Sounds and ply.TFAVOX_Sounds.nzombies then
-			local sndtbl = ply.TFAVOX_Sounds['nzombies'].facility
-			if sndtbl and sndtbl['packapunch'] then
-				TFAVOX_PlayVoicePriority( ply, sndtbl['packapunch'], 0 )
-			end
-		end
-	end
-end)
+return MODULE
