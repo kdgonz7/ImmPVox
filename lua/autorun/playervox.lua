@@ -253,7 +253,6 @@ function PVox:ImplementModule(name, imp_func)
 		return
 	end
 
-	local ext
 	PVox.Modules[name], ext = imp_func()
 
 	ext = ext or "wav"
