@@ -728,6 +728,8 @@ PVox:Mount()
 --*			["enemy_killed"] = "enemy_spotted"
 PVox:ImplementModule("combinesoldier", function(ply)
 	return {
+		["name"] = "Combine Soldier",
+		["description"] = "A combine soldier VO. Designed by 'la manzana blanca'",
 		["actions"] = {
 			["print_name"] = "Half-Life 2 Combine Soldier VOX",
 			["description"] = "A module that contains Half-Life 2 Combine voice lines.",
@@ -1059,6 +1061,8 @@ end)
 PVox:ImplementModule("none", function(ply)
 	return {
 		["print_name"] = "None (A dummy module)",
+		["name"] = "None (dummy module)",
+		["description"] = "A module used as a disabler for PVox.",
 		["actions"] = {
 			["on_ready"] = {},
 			["enemy_spotted"] = {},
