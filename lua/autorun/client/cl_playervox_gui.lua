@@ -166,13 +166,5 @@ hook.Add("OnPlayerChat", "PVoxMenuCommand", function(ply, text)
     end
 end)
 
--- Add to context menu
-hook.Add("PopulateToolMenu", "PVoxConfigMenu", function()
-    spawnmenu.AddToolMenuOption("Options", "Player", "PVoxConfig", "PVox Settings", "", "", function(panel)
-        panel:ClearControls()
-        local button = panel:Button("Open PVox Configuration")
-        button.DoClick = OpenPVoxGUI
-    end)
-end)
 
 print("PVox GUI module loaded!")
