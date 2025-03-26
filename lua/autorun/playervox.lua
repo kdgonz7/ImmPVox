@@ -92,7 +92,7 @@ local PVoxUsePlayerModelBinds    = CreateConVar("pvox_useplayermodelbinds", "1",
 local PVoxLocalizeDamage         = CreateConVar("pvox_localizedamage", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxSpecifyEntity          = CreateConVar("pvox_specifyotherentity", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxSendDamageOnce         = CreateConVar("pvox_senddamageonce", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
-local PVoxGlobalLocalizationLang = CreateConVar("pvox_gl_localizationlang", "en_US", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+local PVoxGlobalLocalizationLang = CreateConVar("pvox_gl_localizationlang", "en-US", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxGlobalVolume           = CreateConVar("pvox_gl_volume", "511", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 local PVoxUseCC                  = CreateConVar("pvox_useclosedcaptioning", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
 
@@ -245,11 +245,20 @@ function PVox:EnableCC(name)
 	if ! PVox.Modules[name] then return end
 
 	PVox.Modules[name].CCEnabled = true
+
+	note("[CCv10] enabled CC for " .. name)
 end
 
 function PVox:ImplementCC(lang, mod, audio_str, sent)
+	-- Base cases: Not a module
 	if ! PVox.Modules[mod] then return end
-	if ! PVox.Modules[mod].cc then return end
+	
+	-- Base cases: Module has no CC, create it
+	if ! PVox.Modules[mod].cc then
+		PVox.Modules[mod].cc = {}
+	end
+	
+	-- Base cases: Module has no CC for lang, create it
 	if ! PVox.Modules[mod].cc[lang] then
 		PVox.Modules[mod].cc[lang] = {}
 	end
@@ -436,6 +445,7 @@ function PVox:ImplementModule(name, imp_func)
 
 			-- FIXME: disable if performance tanks hard
 			-- FIXME: should tank at worse O(n), n being the length of action sound_table but that's worse worse
+			-- FIXME: "discrete" randomness
 			if rand_sound == self:GetLastSound(ply) and #action_soundtable > 1 then
 				while rand_sound == self:GetLastSound(ply) do
 					rand_sound = action_soundtable[math.random(1, #action_soundtable)]
