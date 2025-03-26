@@ -69,7 +69,11 @@
 -- -> added a NEW SUPER MODERN BLAINGLY FAST UI for checking server modules
 -- -> fixed the conflicts between viewpop viewbunch, and dsteps!
 --
-PVOX_VersionStr = "pvox-v10-git-3651ceb"
+-- New in version v11 - we've fixed a lot more bugs. I enhanced the server module menu to change the player's preset
+-- and also got to work on making the radial menu better
+--
+--
+PVOX_VersionStr = "pvox-v11"
 
 if SERVER then
 	util.AddNetworkString("PVox_ChangePlayerPreset")
