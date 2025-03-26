@@ -75,29 +75,6 @@ hook.Add( "PopulateToolMenu", "Cat232", function()
 	spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXVOX", "#VOX Controls", "", "", function( panel )
 		panel:Clear()
 		
-		---@class DComboBox
-		local Combo = panel:ComboBox( "PVOX Preset", "" )
-		panel:ControlHelp( "Change your current PVOX preset in realtime. To use your playermodel bind, you can set your preset to `none`, and then reset your character." )
-
-		for k, v in pairs(PVox.Modules) do
-			Combo:AddChoice( k )
-		end
-
-		Combo.OnSelect = function( self, index, value )
-			net.Start("PVox_ChangePlayerPreset")
-			net.WriteString(value)
-			net.SendToServer()
-
-			notification.AddLegacy("PVOX Preset set to " .. value .. "!", NOTIFY_GENERIC, 6)
-		end
-
-		Combo:SetValue( "combine-soldier" )
-	end )
-
-	---@param panel DForm
-	spawnmenu.AddToolMenuOption( "Options", "PVOX", "PVOXINFO", "#Server Information", "", "", function( panel )
-		panel:Clear()
-		
-		panel:Button("Check Server's Modules", "pvox_menu")
+		panel:Button("Change Preset", "pvox_menu")
 	end )
 end )
