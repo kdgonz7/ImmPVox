@@ -34,4 +34,7 @@ PVox:ImplementModule("duck", function(ply)
 	}
 end)
 
+PVox:ImplementCC("en-US", "duck", "playervox/modules/duck/quack_5.mp3", "Quack")
+PVox:EnableCC("duck")
+
 PVox:RegisterPlayerModel("models/player/duckie2/duckie.mdl", "duck")

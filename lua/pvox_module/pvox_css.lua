@@ -46,6 +46,10 @@ PVox:ImplementModule("css-ct", function(ply)
 	}
 end)
 
+PVox:ImplementCC("en-US", "css-ct", "playervox/modules/css/ct_coverme.wav", "Cover me!") 
+PVox:ImplementCC("en-US", "css-ct", "playervox/modules/css/ct_fireinhole.wav", "Fire in the hole!") 
+PVox:EnableCC("css-ct")
+ 
 PVox:RegisterPlayerModel("models/player/guerilla.mdl", "css-ct")
 PVox:RegisterPlayerModel("models/player/leet.mdl", "css-ct")
 PVox:RegisterPlayerModel("models/player/phoenix.mdl", "css-ct")
