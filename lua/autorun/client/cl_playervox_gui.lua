@@ -199,6 +199,15 @@ local function OpenPVoxGUI()
     footerPanel.Paint = function(self, w, h)
         draw.SimpleText(PVOX_VersionStr, "PVox_Text", 5, h/2, COLOR_THEME.textDark, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
+
+    local countPanel = vgui.Create("DPanel", PVoxFrame)
+    countPanel:SetTall(30)
+    countPanel:Dock(BOTTOM)
+
+    countPanel:DockMargin(10, 0, 10, 5)
+    countPanel.Paint = function(self, w, h)
+        draw.SimpleText(tostring(#table.GetKeys(PVox.Modules)) .. " modules installed.", "PVox_Text", w-5, h/2, COLOR_THEME.textDark, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+    end
 end
 
 -- Register the console command to open the GUI
