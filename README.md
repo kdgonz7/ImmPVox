@@ -18,7 +18,7 @@ PlayerVox (PVOX) is a Garry's Mod addon designed to give players dynamic voice c
 
 ## File Structure & Loading
 
-* **Core Script:** The main logic resides in the provided Lua file(s).
+* **Core Script:** The main logic resides in the `playervox*.lua` files.
 * **Module Files:** External modules are loaded via `PVox:Mount()` from `lua/pvox_module/*.lua`. Each file should use `PVox:ImplementModule` to register its sounds and settings. `AddCSLuaFile` is used to send these module definitions to clients.
 * **Sound Files:** The system expects sound files (default `.wav`, customizable per module) to be located in specific subdirectories within `sound/pvox/[module_name]/`, namely:
     * `actions/[action_name]/`: For action-triggered sounds.
