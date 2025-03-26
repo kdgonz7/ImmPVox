@@ -259,9 +259,6 @@ function PVox:ImplementCC(lang, mod, audio_str, sent)
 	note("[CCv9] added " .. audio_str .. " to " .. lang .. " for " .. mod)
 end
 
---* NOTE if you're using glualint,
---* this entire section is a bunch of warnings. ignore them.
---* this is for the PVOX class.
 function PVox:ImplementModule(name, imp_func)
 	if PVox:ModuleIsBlackListed(name) then
 		warn("could not implement module " .. name .. " because it is blacklisted.")
