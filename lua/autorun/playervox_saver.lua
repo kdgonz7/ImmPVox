@@ -23,11 +23,11 @@ if SERVER then
 
     -- Function to load ALL data from file into the server's memory
     function PVOX_InitializeData()
-        print("[PVOX] Initializing data...")
+        note("[PVOX] Initializing data...")
 
         local rawData = file.Read(SAVE_FILE_NAME, "DATA")
         if not rawData or rawData == "" then
-            print("[PVOX] No existing data file found or file is empty. Starting fresh.")
+            note("[PVOX] No existing data file found or file is empty. Starting fresh.")
             PVOX_DataStore = {}
             return
         end
@@ -35,8 +35,8 @@ if SERVER then
         local success, decodedData = pcall(util.JSONToTable, rawData)
 
         if not success or type(decodedData) ~= "table" then
-            print("[PVOX] ERROR: Could not decode JSON data from " .. SAVE_FILE_NAME .. ". Backing up and starting fresh.")
-            print("[PVOX] Error details: ", decodedData)
+            note("[PVOX] ERROR: Could not decode JSON data from " .. SAVE_FILE_NAME .. ". Backing up and starting fresh.")
+            note("[PVOX] Error details: ", decodedData)
             
             file.Copy(SAVE_FILE_NAME, SAVE_FILE_NAME .. ".bak", "DATA")
             
@@ -46,26 +46,26 @@ if SERVER then
         end
 
         PVOX_DataStore = decodedData
-        print("[PVOX] Successfully loaded data for " .. table.Count(PVOX_DataStore) .. " players.")
+        note("[PVOX] Successfully loaded data for " .. table.Count(PVOX_DataStore) .. " players.")
     end
 
     -- Function to save ALL data from memory to the file
     function PVOX_SaveAllDataToFile()
         if not PVOX_DataStore then
-            print("[PVOX] ERROR: Data store does not exist, cannot save.")
+            note("[PVOX] ERROR: Data store does not exist, cannot save.")
             return
         end
 
         local success, encodedData = pcall(util.TableToJSON, PVOX_DataStore, true) -- Use true for pretty printing (optional)
 
         if not success then
-            print("[PVOX] ERROR: Failed to encode data to JSON!")
-            print("[PVOX] Error details: ", encodedData) -- Print the error message
+            note("[PVOX] ERROR: Failed to encode data to JSON!")
+            note("[PVOX] Error details: ", encodedData) -- Print the error message
             return
         end
 
         file.Write(SAVE_FILE_NAME, encodedData)
-        print("[PVOX] All player data saved successfully.")
+        note("[PVOX] All player data saved successfully.")
     end
 
     -- Function to load data for a SPECIFIC player when they join/spawn
@@ -102,7 +102,7 @@ if SERVER then
         local steamID64 = ply:SteamID()
         local currentPreset = ply:GetNWString("vox_preset", "none") -- Get the current preset
 
-        print("[PVOX] Updating data in memory for " .. ply:Nick() .. " - Preset: " .. currentPreset)
+        note("[PVOX] Updating data in memory for " .. ply:Nick() .. " - Preset: " .. currentPreset)
 
         -- if not exist add it
         if not PVOX_DataStore[steamID64] then
@@ -133,7 +133,7 @@ if SERVER then
 
     -- Called when a player leaves
     hook.Add("PlayerDisconnect", "PVOX_SavePlayerOnLeave", function(ply)
-        print("[PVOX] Player " .. ply:Nick() .. " disconnected.")
+        note("[PVOX] Player " .. ply:Nick() .. " disconnected.")
         -- Update their data in memory one last time based on NWString
         PVOX_UpdatePlayerData(ply)
         -- Save all data when a player leaves (good practice)
@@ -142,13 +142,13 @@ if SERVER then
 
     -- Called when the server is shutting down
     hook.Add("ShutDown", "PVOX_SaveDataOnShutdown", function()
-        print("[PVOX] Server shutting down. Saving all data...")
+        note("[PVOX] Server shutting down. Saving all data...")
         PVOX_SaveAllDataToFile()
     end)
 
     concommand.Add("pvox_saveall", function(ply, cmd, args)
         if ply:IsAdmin() then
-            print("[PVOX] Admin triggered manual data save.")
+            note("[PVOX] Admin triggered manual data save.")
             PVOX_SaveAllDataToFile()
             ply:ChatPrint("[PVOX] All player data saved.")
         else
