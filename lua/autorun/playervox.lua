@@ -1238,13 +1238,19 @@ hook.Add("PlayerCanPickupWeapon", "PlayerVoxPickupSound", function(ply, wep)
 end)
 
 hook.Add("PlayerCanPickupItem", "PlayerVoxPickupSound", function(ply, wep)
-	if _1 then return end
+	-- Avoid recursion by tracking if we've already run this hook
+	if already_ran_myself then return end
 
-	_1 = true
+	-- Set flag to prevent infinite recursion
+	already_ran_myself = true
+	
+	-- Run the hook and check if any other addon denied the pickup
 	local res = hook.Run("PlayerCanPickupItem", ply, wep)
+	if res == false then already_ran_myself = false; return end
+	
+	-- Reset our recursion protection flag
+	already_ran_myself = false
 
-	if res == false then _1 = false; return end
-	_1 = false
 
 	local preset = ply:GetNWString("vox_preset", "none")
 
@@ -1262,41 +1268,6 @@ hook.Add("PlayerCanPickupItem", "PlayerVoxPickupSound", function(ply, wep)
 
 	return true
 end)
-
--- hook.Add("WeaponEquip", "W", function(wep, own)
--- 	wep.RanOG = false
--- 	wep.Reload = function (self)
--- 		if ! self.RanOG then
--- 			self.RanOG = true
--- 			self:Reload()
--- 		end
-
--- 		print("ran reload")
-
--- 		-- if we already have enough,
--- 		-- stop spamming
-
--- 		if ! IsValid(wep) then
--- 			warn("tried to call built-in module reload with no active weapon. non-fatal.")
--- 			return
--- 		end
-
--- 		if wep:Clip1() >= wep:GetMaxClip1() then return end
-
--- 		-- play the reload VOX from the player's preset
--- 		local playerPreset = own:GetNWString("vox_preset", "none")
-
--- 		if playerPreset ~= "none" then
--- 			local mod = PVox:GetModule(playerPreset)
-
--- 			if mod then
--- 				if own:GetAmmoCount(wep:GetPrimaryAmmoType()) == 0 then mod:EmitAction(ply, "no_ammo") return end
--- 				mod:EmitAction(ply, "reload")
--- 			end
--- 		end
--- 	end
--- end)
-
 
 -- some NPC support
 local NPCS = {
@@ -1627,7 +1598,7 @@ hook.Add("ScalePlayerDamage", "PlayerVoxPlayerShouldTakeDamage", function(ply, h
 end)
 
 
-hook.Add("PlayerDeath", "PlayerVoxPlayerDeath", function(ply, inflictor, attacker)
+hook.Add("PlayerDeath", "PlayerVoxPlayerDeath", function(ply, _, attacker)
 	if ! IsValid(ply) then return end
 	if ! IsValid(attacker) then return end
 
