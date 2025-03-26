@@ -88,7 +88,7 @@ local function OpenPVoxGUI()
         table.insert(modules, {
             name = moduleValue.name or moduleValue.print_name or moduleName,
             description = moduleValue.description or "a generic PVOX module.",
-            enabled = true, -- todo: wtf? always'll be true.
+            rawName = moduleName,
         })
     end
     
@@ -101,7 +101,8 @@ local function OpenPVoxGUI()
         modulePanel:SetBackgroundColor(COLOR_THEME.moduleBackground)
         
         modulePanel.Paint = function(self, w, h)
-            local borderColor = module.enabled and COLOR_THEME.moduleActive or COLOR_THEME.moduleBackground
+            local enable = LocalPlayer():GetNWString("vox_preset") == module.rawName
+            local borderColor = enable and COLOR_THEME.moduleActive or COLOR_THEME.moduleBackground
             draw.RoundedBox(6, 0, 0, w, h, borderColor)
             draw.RoundedBox(5, 1, 1, w-2, h-2, COLOR_THEME.moduleBackground)
         end
@@ -128,19 +129,24 @@ local function OpenPVoxGUI()
 
 
         toggleButton.Paint = function(self, w, h)
-            local bgColor = module.enabled and COLOR_THEME.accent or COLOR_THEME.hover
+            local enabled = LocalPlayer():GetNWString("vox_preset") == module.rawName
+            local bgColor = enabled and COLOR_THEME.accent or COLOR_THEME.hover
+
             if self:IsHovered() then
                 bgColor = ColorAlpha(bgColor, 200)
             end
             
             draw.RoundedBox(4, 0, 0, w, h, bgColor)
-            draw.SimpleText(module.enabled and "Enabled" or "Disabled", "PVox_Text", w/2, h/2, COLOR_THEME.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(enabled and "Enabled" or "Disabled", "PVox_Text", w/2, h/2, COLOR_THEME.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         
         toggleButton.DoClick = function()
-            -- module.enabled = not module.enabled
-            -- Add your actual toggle logic here, for example:
-            -- PVox.ToggleModule(module.name, module.enabled)
+            net.Start("PVox_ChangePlayerPreset")
+            net.WriteString(module.rawName)
+            net.SendToServer()
+
+            notification.AddLegacy("Changed preset to '" .. module.name .. "!'", NOTIFY_HINT, 3)
+
             surface.PlaySound("ui/buttonclick.wav")
         end
     end
