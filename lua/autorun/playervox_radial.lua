@@ -214,6 +214,10 @@ hook.Add("Think", "PVox_RadialMenuMouse", function()
     if not PVoxCalloutMenuOpen then return end
     
     if HoverItem and input.IsMouseDown(MOUSE_LEFT) then
+        if Selected != HoverItem then
+            surface.PlaySound("ui/buttonclick.wav")
+        end
+
         Selected = HoverItem
     end
 
