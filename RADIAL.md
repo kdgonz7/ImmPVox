@@ -1,4 +1,4 @@
-# PVOX Radial Callout Menu
+# PVOX Radial Callout Menu (playervox_radial.lua)
 
 This client-side script provides a visually appealing and interactive radial menu allowing players to select and activate voice callouts defined in their currently active PVOX module.
 
