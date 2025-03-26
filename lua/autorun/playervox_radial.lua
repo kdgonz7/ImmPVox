@@ -108,9 +108,7 @@ hook.Add("HUDPaint", "PVox_RadialMenu", function()
     
     -- Draw menu items in a circle
     local itemCount = #Options
-    
-    -- start on the cancel instead of the first element
-    Selected = itemCount
+
     
     
     local angleStep = 360 / itemCount
@@ -181,6 +179,8 @@ hook.Add("HUDPaint", "PVox_RadialMenu", function()
             draw.Circle(x, y, ItemRadius * 1.3 * OpenAnimation, ColorAlpha(MenuColors.Selected, PVoxCalloutMenuAlpha * 0.3))
         end
     end
+
+
     
     local selPos = GetCirclePoint(SelectedAngle, scaledRadius + 20)
     draw.SimpleTextOutlined(
@@ -251,6 +251,9 @@ end
 concommand.Add("+pvox_open_callout", function()
     PVoxCalloutMenuOpen = true
     gui.EnableScreenClicker(true)
+
+    -- start on the cancel instead of the first element
+    Selected = #Options
 end)
 
 concommand.Add("-pvox_open_callout", function()
