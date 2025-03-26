@@ -34,7 +34,6 @@ surface.CreateFont("PVox_Text", {
     weight = 400,
     antialias = true,
 })
-
 -- Main frame for PVox GUI
 local function OpenPVoxGUI()
     if IsValid(PVoxFrame) then PVoxFrame:Remove() end
@@ -52,7 +51,7 @@ local function OpenPVoxGUI()
         draw.RoundedBoxEx(8, 0, 0, w, 40, COLOR_THEME.header, true, true, false, false)
         draw.SimpleText("PVox Configuration", "PVox_Title", 20, 20, COLOR_THEME.accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
-    
+
     -- Close Button
     local closeButton = vgui.Create("DButton", PVoxFrame)
     closeButton:SetSize(30, 30)
@@ -66,10 +65,42 @@ local function OpenPVoxGUI()
         PVoxFrame:Close()
     end
     
-    -- Create a scroll panel to contain modules
-    local scrollPanel = vgui.Create("DScrollPanel", PVoxFrame)
+    -- Create tab container
+    local tabSheet = vgui.Create("DPropertySheet", PVoxFrame)
+    tabSheet:Dock(FILL)
+    tabSheet:DockMargin(10, 15, 10, 10)
+    tabSheet.Paint = function(self, w, h) end
+    
+    function tabSheet:CreateTab(name)
+        local tab = vgui.Create("DPanel")
+        tab:Dock(FILL)
+        tab.Paint = function(_, _, _) end -- Transparent background
+        
+        self:AddSheet(name, tab, nil, false, false)
+        return tab
+    end
+    
+    local oldAddSheet = tabSheet.AddSheet
+
+    function tabSheet:AddSheet(label, panel, material, noStretchX, noStretchY, tooltip)
+        local sheet = oldAddSheet(self, label, panel, material, noStretchX, noStretchY, tooltip)
+        
+        if sheet and sheet.Tab then
+            sheet.Tab.Paint = function(self, w, h)
+                local activeColor = self:IsActive() and COLOR_THEME.accent or COLOR_THEME.header
+                draw.RoundedBoxEx(4, 0, 0, w, h, activeColor, true, true, false, false)
+                
+                local textColor = self:IsActive() and COLOR_THEME.text or COLOR_THEME.textDark
+            end
+        end
+        
+        return sheet
+    end
+    
+    local stockTab = tabSheet:CreateTab("Stock/Regular")
+    local scrollPanel = vgui.Create("DScrollPanel", stockTab)
+
     scrollPanel:Dock(FILL)
-    scrollPanel:DockMargin(10, 50, 10, 10)
     
     -- Customize the scroll bar
     local sbar = scrollPanel:GetVBar()
@@ -127,7 +158,6 @@ local function OpenPVoxGUI()
         toggleButton:Dock(RIGHT)
         toggleButton:DockMargin(0, 30, 20, 30)
 
-
         toggleButton.Paint = function(self, w, h)
             local enabled = LocalPlayer():GetNWString("vox_preset") == module.rawName
             local bgColor = enabled and COLOR_THEME.accent or COLOR_THEME.hover
@@ -151,7 +181,17 @@ local function OpenPVoxGUI()
         end
     end
     
-    -- version info
+    -- [[[ OTHER TAB ]]]
+    local settingsTab = tabSheet:CreateTab("Other")
+    local settingsLabel = vgui.Create("DLabel", settingsTab)
+
+    settingsLabel:SetText("Hey! PVox is working on this section here.")
+    settingsLabel:SetFont("PVox_ModuleTitle")
+    settingsLabel:SetTextColor(COLOR_THEME.text)
+    settingsLabel:SetPos(20, 20)
+    settingsLabel:SizeToContents()
+    
+    -- Version info at the bottom
     local footerPanel = vgui.Create("DPanel", PVoxFrame)
     footerPanel:SetTall(30)
     footerPanel:Dock(BOTTOM)
