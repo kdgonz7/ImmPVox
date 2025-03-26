@@ -79,7 +79,7 @@ if SERVER then
 
         -- Check if data exists for this player in our memory store
         if PVOX_DataStore[steamID64] then
-            local savedPreset = PVOX_DataStore[steamID64].preset -- Assuming you store it like { preset = "value" }
+            local savedPreset = PVOX_DataStore[steamID64].preset
 
             if savedPreset and savedPreset ~= "none" then
                 note("[PVOX] Found saved preset '" .. savedPreset .. "' for " .. ply:Nick())
