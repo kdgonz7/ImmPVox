@@ -92,7 +92,7 @@ if SERVER then
             end
         else
             
-            ply:SetNWString("vox_preset", "none") -- Set your default here
+            ply:SetNWString("vox_preset", "none")
         end
     end
 
@@ -146,9 +146,8 @@ if SERVER then
         PVOX_SaveAllDataToFile()
     end)
 
-    -- Example: Add a console command for admins to force a save
     concommand.Add("pvox_saveall", function(ply, cmd, args)
-        if ply:IsAdmin() then -- Or use your own permission check
+        if ply:IsAdmin() then
             print("[PVOX] Admin triggered manual data save.")
             PVOX_SaveAllDataToFile()
             ply:ChatPrint("[PVOX] All player data saved.")
@@ -167,9 +166,7 @@ if SERVER then
         local newPreset = args[1]
         -- Add validation here if needed (e.g., check if preset name is valid)
         ply:SetNWString("vox_preset", newPreset)
-        PVOX_UpdatePlayerData(ply) -- Update the data in the server memory
-        -- Decide if you want to save *all* data to file immediately or wait
-        -- PVOX_SaveAllDataToFile()
+        PVOX_UpdatePlayerData(ply)
         ply:ChatPrint("[PVOX] Your preset has been set to: " .. newPreset)
         ply:SendLua("notification.AddLegacy('PVOX preset saved: " .. newPreset .. "', NOTIFY_GENERIC, 5)")
 
