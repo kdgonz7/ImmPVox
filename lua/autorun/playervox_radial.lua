@@ -249,6 +249,8 @@ function draw.BlurredCircle(x, y, radius, color)
 end
 
 concommand.Add("+pvox_open_callout", function()
+    Options = {}
+
     PVoxCalloutMenuOpen = true
     gui.EnableScreenClicker(true)
 
