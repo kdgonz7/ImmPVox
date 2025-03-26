@@ -628,46 +628,7 @@ function PVox:CleanBlankModules()
 	end
 end
 
-function PVOX_LoadPresets()
-	local tb = file.Read("pvox_presets.txt")
-	if ! tb then return end
 
-	local JS = util.JSONToTable(tb)
-	if ! JS then return end
-
-	local allPlayers = player.GetAll()
-
-	for k,v in pairs(JS) do
-		local ply = player.GetBySteamID64(k)
-		if ! IsValid(ply) then continue end
-		if ! ply then continue end
-
-		ply:SetNWString("vox_preset", v)
-	end
-end
-
-function PVOX_LoadPreset(player)
-	PVOX_LoadPresets() --todo: might make this better
-end
-
--- this is a fake member function lol
--- it's not a part of the PVOX class, but
--- still has the name PVOX in it
-function PVOX_SavePreset()
-	--iterate through every player
-	-- save their preset to a table
-
-	local tbl_presets = {}
-
-	for _, v in pairs(player.GetAll()) do
-		tbl_presets[v:SteamID64()] = v:GetNWString("vox_preset", "none")
-	end
-
-	local JS = util.TableToJSON(tbl_presets) -- convert to JSON
-
-	note("saved PVox Presets!")
-	file.Write("pvox_presets.txt", JS)
-end
 
 function PVox:GenerateSimilarNames(amount, common_name, ext, zeroes, prefix)
 	zeroes = zeroes or false
@@ -694,6 +655,8 @@ if SERVER then
 		if ! new_preset then return end
 
 		ply:SetNWString("vox_preset", new_preset)
+
+		PVOX_UpdatePlayerData(ply)
 	end)
 
 	net.Receive("PVox_GetCallouts", function(len, ply)
@@ -1177,16 +1140,16 @@ if SERVER then
 	PrintMessage(HUD_PRINTCENTER, "PVox Loaded :) (" .. PVOX_VersionStr .. ")")
 end
 
+-- up until this point, the client was good and now we're equal. gtfo now.
 if CLIENT then return end
+
 hook.Add("PlayerInitialSpawn", "StartPlayerValues", function(ply)
-	ply:SetNWString("vox_preset", "none")
+	-- ply:SetNWString("vox_preset", "none")
 	ply:SetNWBool("vox_enabled", true)
 	ply:SetNWBool("PVOX_Emitting", false)
 	ply:SetNWString("PVOX_CachedSound", "")
 
 	-- loaded network stuff, we're good.
-
-	-- PVOX_LoadPresets()
 end)
 
 hook.Add("PlayerSpawn", "StartPlayerPresetByModel", function(ply)
@@ -1194,7 +1157,10 @@ hook.Add("PlayerSpawn", "StartPlayerPresetByModel", function(ply)
 	if ! PVoxUsePlayerModelBinds:GetBool() then return end
 
 	timer.Simple(0.1, function()
+
 		if ply:GetNWString("vox_preset", "none") ~= "none" then return end
+
+
 		local model = ply:GetModel()
 		local pm_preset = PVox.PlayerModelBinds[model]
 
@@ -1615,4 +1581,3 @@ hook.Add("PlayerDeath", "PlayerVoxPlayerDeath", function(ply, _, attacker)
 	plyMod:EmitAction(ply, "death", true)
 end)
 
-hook.Add("ShutDown", "PlayerVoxSavePreset", PVOX_SavePreset)
