@@ -29,7 +29,7 @@ hook.Add( "PopulateToolMenu", "Cat232", function()
 			panel:CheckBox("Enable CC (Closed Captions)", "pvox_useclosedcaptioning")
 			panel:ControlHelp( "Enables printing audio files to the chat, from a player, as they're being played. Similar to Counter-Strike games." )
 
-			panel:TextEntry("Localization Language", "pvox_localizationlang")
+			panel:TextEntry("Localization Language", "pvox_gl_localizationlang")
 			panel:ControlHelp( "The GLOBAL language for PVOX CC. This IS A SERVER SIDE VALUE. Defaults to en-US, and different languages can depend on how the module implements them." )
 		end
 	end )
