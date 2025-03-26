@@ -80,9 +80,11 @@ hook.Add("HUDPaint", "PVox_RadialMenu", function()
     for i = 1, segments do
         local angle1 = (i-1) * 360 / segments
         local angle2 = i * 360 / segments
+        
         local p1 = GetCirclePoint(angle1, scaledRadius)
         local p2 = GetCirclePoint(angle2, scaledRadius)
-        surface.DrawLine(
+
+        surface.DrawLine(   
             CenterPos.x + p1.x, CenterPos.y + p1.y,
             CenterPos.x + p2.x, CenterPos.y + p2.y
         )
@@ -106,6 +108,11 @@ hook.Add("HUDPaint", "PVox_RadialMenu", function()
     
     -- Draw menu items in a circle
     local itemCount = #Options
+    
+    -- start on the cancel instead of the first element
+    Selected = itemCount
+    
+    
     local angleStep = 360 / itemCount
     
     -- Get mouse angle for hover detection
@@ -123,6 +130,7 @@ hook.Add("HUDPaint", "PVox_RadialMenu", function()
         for i = 1, itemCount do
             local itemAngle = (i - 1) * angleStep
             local angleDiff = math.abs(((mouseAngle - itemAngle + 180) % 360) - 180)
+
             if angleDiff < angleStep / 2 then
                 HoverItem = i
                 break
@@ -158,7 +166,7 @@ hook.Add("HUDPaint", "PVox_RadialMenu", function()
         
         draw.SimpleTextOutlined(
             text,
-            "PVox-Normal-HUD-Font",
+            "PVox-Radial-HUD-Font",
             x,
             y,
             ColorAlpha(isSelected and MenuColors.Selected or MenuColors.Text, PVoxCalloutMenuAlpha),
@@ -174,7 +182,6 @@ hook.Add("HUDPaint", "PVox_RadialMenu", function()
         end
     end
     
-    -- Draw selection indicator (arrow or something)
     local selPos = GetCirclePoint(SelectedAngle, scaledRadius + 20)
     draw.SimpleTextOutlined(
         "▶",
@@ -189,7 +196,6 @@ hook.Add("HUDPaint", "PVox_RadialMenu", function()
     )
 end)
 
--- Handle keyboard and mouse input
 hook.Add("PlayerBindPress", "PVox_RadialMenuControls", function(ply, bind, pressed)
     if not PVoxCalloutMenuOpen then return end
     if not pressed then return end
@@ -204,16 +210,15 @@ hook.Add("PlayerBindPress", "PVox_RadialMenuControls", function(ply, bind, press
     end
 end)
 
--- Add mouse controls
 hook.Add("Think", "PVox_RadialMenuMouse", function()
     if not PVoxCalloutMenuOpen then return end
     
     if HoverItem and input.IsMouseDown(MOUSE_LEFT) then
         Selected = HoverItem
     end
+
 end)
 
--- Draw circle utility function
 function draw.Circle(x, y, radius, color)
     local segments = 32
     local poly = {}
@@ -234,14 +239,12 @@ end
 -- Blurred circle for background effect
 function draw.BlurredCircle(x, y, radius, color)
     render.SetScissorRect(x - radius, y - radius, x + radius, y + radius, true)
+
     surface.SetDrawColor(color)
     surface.SetMaterial(Material("pp/blurscreen"))
-    
-    for i = 1, 3 do
-        surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
-    end
-    
+
     render.SetScissorRect(0, 0, 0, 0, false)
+
     draw.Circle(x, y, radius, color)
 end
 
